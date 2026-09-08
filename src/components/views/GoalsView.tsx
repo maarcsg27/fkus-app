@@ -6,8 +6,7 @@ import { GoalDetailModal } from '../goals/GoalDetailModal';
 import { Target, Plus, Sparkles } from 'lucide-react';
 
 export const GoalsView: React.FC = () => {
-  const { goals, setSelectedGoalId } = useFKUS();
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { goals, setIsGoalFormOpen } = useFKUS();
 
   return (
     <div className="space-y-4 pb-20 animate-in fade-in duration-150">
@@ -23,7 +22,7 @@ export const GoalsView: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setIsCreateOpen(true)}
+          onClick={() => setIsGoalFormOpen(true)}
           className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-400 hover:brightness-110 text-neutral-950 font-bold text-xs inline-flex items-center gap-1 shadow-sm"
         >
           <Plus size={14} strokeWidth={2.5} />
@@ -57,7 +56,7 @@ export const GoalsView: React.FC = () => {
             Define qué quieres lograr en los próximos meses (un proyecto, un viaje, una carrera...).
           </p>
           <button
-            onClick={() => setIsCreateOpen(true)}
+            onClick={() => setIsGoalFormOpen(true)}
             className="mt-3 px-4 py-2 bg-teal-500 hover:bg-teal-400 text-neutral-950 font-bold text-xs rounded-xl inline-flex items-center gap-1"
           >
             <Plus size={14} />
@@ -72,12 +71,7 @@ export const GoalsView: React.FC = () => {
         </div>
       )}
 
-      {/* Modals */}
-      <GoalFormModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-      />
-
+      {/* Goal Detail Modal */}
       <GoalDetailModal />
     </div>
   );

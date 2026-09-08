@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, MoreHorizontal } from 'lucide-react';
 import { IconRenderer } from '../common/IconRenderer';
 
 interface TopHeaderProps {
@@ -13,7 +13,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
     categories, 
     selectedCategoryIdFilter, 
     setSelectedCategoryIdFilter, 
-    setIsSearchOpen 
+    setIsSearchOpen,
+    activeTab,
+    setActiveTab 
   } = useFKUS();
 
   const activeCategory = categories.find(c => c.id === selectedCategoryIdFilter);
@@ -22,7 +24,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
     <header className="sticky top-0 z-30 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3">
       <div className="flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center space-x-2.5">
+        <div 
+          onClick={() => setActiveTab('home')}
+          className="flex items-center space-x-2.5 cursor-pointer select-none"
+        >
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-neutral-950 font-black text-base shadow-sm">
             F
           </div>
@@ -98,13 +103,26 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
             <Search size={15} />
           </button>
 
+          {/* Más / Ajustes Button (Moved to Top Right) */}
+          <button
+            onClick={() => setActiveTab(activeTab === 'more' ? 'home' : 'more')}
+            className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
+              activeTab === 'more'
+                ? 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-sm'
+                : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
+            }`}
+            title="Más / Ajustes / Categorías"
+          >
+            <MoreHorizontal size={17} />
+          </button>
+
           {/* Desktop Preview Frame Toggle */}
           <button
             onClick={() => setShowMobileFrame(!showMobileFrame)}
             className="hidden lg:flex items-center text-[11px] font-medium px-2 py-1 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition-colors"
             title="Cambiar entre vista móvil y pantalla completa"
           >
-            {showMobileFrame ? 'Expandir' : 'Vista Móvil'}
+            {showMobileFrame ? 'Expandir' : 'Móvil'}
           </button>
         </div>
       </div>

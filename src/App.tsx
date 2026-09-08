@@ -7,15 +7,25 @@ import { CalendarView } from './components/views/CalendarView';
 import { TasksView } from './components/views/TasksView';
 import { GoalsView } from './components/views/GoalsView';
 import { MoreView } from './components/views/MoreView';
+import { QuickCreateMenu } from './components/common/QuickCreateMenu';
 import { QuickAddModal } from './components/tasks/QuickAddModal';
 import { TaskDetailModal } from './components/tasks/TaskDetailModal';
+import { GoalFormModal } from './components/goals/GoalFormModal';
+import { RoutineModal } from './components/routines/RoutineModal';
 import { GlobalSearchView } from './components/views/GlobalSearchView';
 
 const MainContent: React.FC<{ showMobileFrame: boolean; setShowMobileFrame: (val: boolean) => void }> = ({
   showMobileFrame,
   setShowMobileFrame,
 }) => {
-  const { activeTab } = useFKUS();
+  const { 
+    activeTab, 
+    isGoalFormOpen, 
+    setIsGoalFormOpen, 
+    isRoutineFormOpen, 
+    setIsRoutineFormOpen,
+    routineToEdit 
+  } = useFKUS();
 
   return (
     <div className={`min-h-screen bg-neutral-950 text-neutral-100 flex flex-col justify-start items-center ${showMobileFrame ? 'p-0 sm:py-6 sm:px-4' : ''}`}>
@@ -27,7 +37,7 @@ const MainContent: React.FC<{ showMobileFrame: boolean; setShowMobileFrame: (val
             : 'max-w-2xl min-h-screen'
         }`}
       >
-        {/* Header */}
+        {/* Header with 3 dots in top right */}
         <TopHeader showMobileFrame={showMobileFrame} setShowMobileFrame={setShowMobileFrame} />
 
         {/* Scrollable Active View */}
@@ -39,12 +49,30 @@ const MainContent: React.FC<{ showMobileFrame: boolean; setShowMobileFrame: (val
           {activeTab === 'more' && <MoreView />}
         </main>
 
-        {/* Fixed Bottom Navigation */}
+        {/* Centered Bottom Navigation (2 items | + | 2 items) */}
         <BottomNav />
 
         {/* Global Modals */}
+        <QuickCreateMenu />
         <QuickAddModal />
         <TaskDetailModal />
+        
+        {/* Global Goal & Routine Modals triggered from QuickCreateMenu */}
+        {isGoalFormOpen && (
+          <GoalFormModal
+            isOpen={isGoalFormOpen}
+            onClose={() => setIsGoalFormOpen(false)}
+          />
+        )}
+
+        {isRoutineFormOpen && (
+          <RoutineModal
+            isOpen={isRoutineFormOpen}
+            onClose={() => setIsRoutineFormOpen(false)}
+            routineToEdit={routineToEdit}
+          />
+        )}
+
         <GlobalSearchView />
       </div>
     </div>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { TaskItem } from '../tasks/TaskItem';
 import { RoutineCard } from '../routines/RoutineCard';
-import { RoutineModal } from '../routines/RoutineModal';
 import { Routine } from '../../types';
 import { 
   Inbox, 
@@ -28,12 +27,12 @@ export const TasksView: React.FC = () => {
     inboxTasks, 
     completedTasks, 
     setIsQuickAddOpen,
+    setIsRoutineFormOpen,
+    setRoutineToEdit,
     selectedCategoryIdFilter,
   } = useFKUS();
 
   const [activeSubTab, setActiveSubTab] = useState<TaskTab>('inbox');
-  const [isRoutineModalOpen, setIsRoutineModalOpen] = useState(false);
-  const [routineToEdit, setRoutineToEdit] = useState<Routine | null>(null);
 
   // Filter tasks by category if active
   const filterByCat = (taskList: typeof tasks) => {
@@ -78,7 +77,7 @@ export const TasksView: React.FC = () => {
             <button
               onClick={() => {
                 setRoutineToEdit(null);
-                setIsRoutineModalOpen(true);
+                setIsRoutineFormOpen(true);
               }}
               className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs inline-flex items-center gap-1 shadow-sm"
             >
@@ -211,7 +210,7 @@ export const TasksView: React.FC = () => {
                 <button
                   onClick={() => {
                     setRoutineToEdit(null);
-                    setIsRoutineModalOpen(true);
+                    setIsRoutineFormOpen(true);
                   }}
                   className="mt-3 px-4 py-2 bg-emerald-500 text-neutral-950 font-bold text-xs rounded-xl"
                 >
@@ -225,7 +224,7 @@ export const TasksView: React.FC = () => {
                   routine={routine}
                   onEdit={(r) => {
                     setRoutineToEdit(r);
-                    setIsRoutineModalOpen(true);
+                    setIsRoutineFormOpen(true);
                   }}
                 />
               ))
@@ -260,15 +259,6 @@ export const TasksView: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Routine Modal */}
-      {isRoutineModalOpen && (
-        <RoutineModal
-          isOpen={isRoutineModalOpen}
-          onClose={() => setIsRoutineModalOpen(false)}
-          routineToEdit={routineToEdit}
-        />
-      )}
     </div>
   );
 };

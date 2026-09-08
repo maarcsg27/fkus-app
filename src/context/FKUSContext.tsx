@@ -14,8 +14,16 @@ interface FKUSContextType {
   setActiveTab: (tab: ActiveTab) => void;
   
   // Modals & Selection
+  isCreateMenuOpen: boolean;
+  setIsCreateMenuOpen: (open: boolean) => void;
   isQuickAddOpen: boolean;
   setIsQuickAddOpen: (open: boolean) => void;
+  isGoalFormOpen: boolean;
+  setIsGoalFormOpen: (open: boolean) => void;
+  isRoutineFormOpen: boolean;
+  setIsRoutineFormOpen: (open: boolean) => void;
+  routineToEdit: Routine | null;
+  setRoutineToEdit: (r: Routine | null) => void;
   selectedTaskId: string | null;
   setSelectedTaskId: (id: string | null) => void;
   selectedGoalId: string | null;
@@ -107,7 +115,11 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
+  const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
+  const [routineToEdit, setRoutineToEdit] = useState<Routine | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
   const [selectedRoutineId, setSelectedRoutineId] = useState<string | null>(null);
@@ -396,8 +408,16 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
         goals,
         activeTab,
         setActiveTab,
+        isCreateMenuOpen,
+        setIsCreateMenuOpen,
         isQuickAddOpen,
         setIsQuickAddOpen,
+        isGoalFormOpen,
+        setIsGoalFormOpen,
+        isRoutineFormOpen,
+        setIsRoutineFormOpen,
+        routineToEdit,
+        setRoutineToEdit,
         selectedTaskId,
         setSelectedTaskId,
         selectedGoalId,
