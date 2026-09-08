@@ -54,19 +54,18 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
           onClick={() => setActiveTab('home')}
           className="flex items-center space-x-3 cursor-pointer group px-2 py-1"
         >
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white font-black text-lg shadow-md shadow-red-600/30 group-hover:scale-105 transition-transform">
-            F
-          </div>
+          <img 
+            src="/logo-icon.png" 
+            alt="FKUS" 
+            className="w-10 h-10 rounded-2xl object-contain shadow-md shadow-red-600/30 group-hover:scale-105 transition-transform"
+          />
           <div>
             <div className="flex items-center space-x-1.5">
-              <span className="font-black text-lg tracking-wider text-white">FKUS</span>
+              <span className="font-black text-xl tracking-wider text-white">FKUS</span>
               <span className="text-[9px] uppercase font-black px-1.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">
                 PRO
               </span>
             </div>
-            <p className="text-[10px] text-neutral-400 font-medium tracking-tight">
-              Apúntalo. Organízalo. Hazlo.
-            </p>
           </div>
         </div>
 
@@ -179,7 +178,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
         </div>
       </div>
 
-      {/* Bottom section: Device preview mode & philosophy */}
+      {/* Bottom section: Device preview mode */}
       <div className="pt-3 border-t border-neutral-900 space-y-3">
         {/* Device Mode Switcher */}
         <div className="space-y-1.5">
@@ -224,13 +223,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
               <Smartphone size={13} />
             </button>
           </div>
-        </div>
-
-        {/* Philosophy Badge */}
-        <div className="px-3 py-2 rounded-xl bg-neutral-900/50 border border-neutral-900 text-center">
-          <p className="text-[11px] font-bold text-neutral-300">
-            "Apúntalo. Organízalo. Hazlo."
-          </p>
         </div>
       </div>
     </aside>

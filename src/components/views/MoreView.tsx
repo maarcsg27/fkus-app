@@ -204,12 +204,13 @@ export const MoreView: React.FC = () => {
       </div>
 
       {/* Manifest & Philosophy Banner */}
-      <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 text-center space-y-1.5">
-        <span className="text-lg font-black tracking-widest text-red-500">FKUS</span>
-        <p className="text-xs font-bold text-white">
-          "Apúntalo. Organízalo. Hazlo."
-        </p>
-        <p className="text-[11px] text-neutral-400 max-w-xs mx-auto leading-relaxed">
+      <div className="p-6 rounded-2xl bg-neutral-950 border border-neutral-800 text-center space-y-3">
+        <img 
+          src="/logo-tight.png" 
+          alt="FKUS Logo" 
+          className="w-36 h-auto mx-auto object-contain"
+        />
+        <p className="text-[11px] text-neutral-400 max-w-xs mx-auto leading-relaxed pt-1">
           Diseñado para ahorrar tiempo, no para consumirlo. Entra, haz lo que tienes que hacer y continúa con tu día.
         </p>
       </div>

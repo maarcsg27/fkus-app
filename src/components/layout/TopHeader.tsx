@@ -28,9 +28,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode 
           onClick={() => setActiveTab('home')}
           className="flex items-center space-x-2.5 cursor-pointer select-none group"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white font-black text-base shadow-sm shadow-red-600/20 group-hover:scale-105 transition-transform">
-            F
-          </div>
+          <img 
+            src="/logo-icon.png" 
+            alt="FKUS" 
+            className="w-8 h-8 rounded-xl object-contain shadow-sm shadow-red-600/20 group-hover:scale-105 transition-transform" 
+          />
           <div>
             <div className="flex items-center space-x-1.5">
               <span className="font-black text-base tracking-wider text-white">FKUS</span>
@@ -38,9 +40,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode 
                 PRO
               </span>
             </div>
-            <p className="text-[10px] text-neutral-400 font-normal tracking-tight hidden sm:block">
-              Apúntalo. Organízalo. Hazlo.
-            </p>
           </div>
         </div>
 
