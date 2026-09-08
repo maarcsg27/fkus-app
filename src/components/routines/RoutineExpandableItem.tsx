@@ -8,8 +8,7 @@ import {
   Clock, 
   Check, 
   Zap, 
-  ListChecks,
-  Edit3
+  ListChecks
 } from 'lucide-react';
 
 interface RoutineExpandableItemProps {
@@ -21,7 +20,7 @@ export const RoutineExpandableItem: React.FC<RoutineExpandableItemProps> = ({
   routine, 
   defaultExpanded = false 
 }) => {
-  const { getCategoryById, setIsRoutineFormOpen, setRoutineToEdit } = useFKUS();
+  const { getCategoryById } = useFKUS();
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [completedStepIds, setCompletedStepIds] = useState<Record<string, boolean>>({});
 
@@ -74,22 +73,9 @@ export const RoutineExpandableItem: React.FC<RoutineExpandableItemProps> = ({
 
         {/* Right Actions & Expand Chevron */}
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="text-[10.5px] font-semibold text-neutral-400 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-lg hidden xs:inline-block">
+          <span className="text-[10.5px] font-semibold text-neutral-400 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-lg">
             {totalSteps} {totalSteps === 1 ? 'paso' : 'pasos'}
           </span>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setRoutineToEdit(routine);
-              setIsRoutineFormOpen(true);
-            }}
-            className="w-6 h-6 rounded-lg text-neutral-500 hover:text-white hover:bg-neutral-800 flex items-center justify-center transition-colors"
-            title="Editar rutina"
-          >
-            <Edit3 size={12} />
-          </button>
 
           <div className={`w-6 h-6 rounded-lg bg-neutral-900 flex items-center justify-center text-neutral-400 group-hover:text-white transition-transform duration-200 ${
             isExpanded ? 'rotate-180 text-red-400 bg-red-500/10' : ''
