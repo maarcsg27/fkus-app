@@ -1,14 +1,14 @@
 import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
-import { Search, Filter, X, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, X, MoreHorizontal, Monitor, Tablet, Smartphone } from 'lucide-react';
 import { IconRenderer } from '../common/IconRenderer';
 
 interface TopHeaderProps {
-  showMobileFrame: boolean;
-  setShowMobileFrame: (val: boolean) => void;
+  deviceMode: 'auto' | 'desktop' | 'tablet' | 'mobile';
+  setDeviceMode: (mode: 'auto' | 'desktop' | 'tablet' | 'mobile') => void;
 }
 
-export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMobileFrame }) => {
+export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode }) => {
   const { 
     categories, 
     selectedCategoryIdFilter, 
@@ -21,8 +21,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
   const activeCategory = categories.find(c => c.id === selectedCategoryIdFilter);
 
   return (
-    <header className="sticky top-0 z-30 bg-black/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3">
-      <div className="flex items-center justify-between">
+    <header className="sticky top-0 z-30 bg-black/95 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 max-w-7xl mx-auto">
         {/* Brand */}
         <div 
           onClick={() => setActiveTab('home')}
@@ -34,7 +34,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
           <div>
             <div className="flex items-center space-x-1.5">
               <span className="font-black text-base tracking-wider text-white">FKUS</span>
-              <span className="text-[9.5px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
+              <span className="text-[9px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
                 PRO
               </span>
             </div>
@@ -42,6 +42,22 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
               Apúntalo. Organízalo. Hazlo.
             </p>
           </div>
+        </div>
+
+        {/* Center / Search bar on tablet & desktop */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4">
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="w-full py-1.5 px-3 rounded-xl bg-neutral-900/90 border border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-white flex items-center justify-between text-xs transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Search size={14} className="text-red-500" />
+              <span>Buscar tareas, rutinas u objetivos...</span>
+            </span>
+            <kbd className="text-[10px] bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800 text-neutral-500 font-mono">
+              ⌘K
+            </kbd>
+          </button>
         </div>
 
         {/* Right Actions */}
@@ -94,10 +110,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
             </div>
           </div>
 
-          {/* Search Trigger */}
+          {/* Search Trigger for Mobile */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="w-8 h-8 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 flex md:hidden items-center justify-center transition-colors"
             title="Buscar (Tareas, Rutinas, Objetivos)"
           >
             <Search size={15} />
@@ -116,14 +132,45 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
             <MoreHorizontal size={17} />
           </button>
 
-          {/* Desktop Preview Frame Toggle */}
-          <button
-            onClick={() => setShowMobileFrame(!showMobileFrame)}
-            className="hidden lg:flex items-center text-[11px] font-medium px-2 py-1 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white transition-colors"
-            title="Cambiar entre vista móvil y pantalla completa"
-          >
-            {showMobileFrame ? 'Expandir' : 'Móvil'}
-          </button>
+          {/* Device Switcher Quick Selector (Escritorio / Tablet / Móvil) */}
+          <div className="hidden sm:flex items-center bg-neutral-950 border border-neutral-800 rounded-xl p-0.5">
+            <button
+              onClick={() => setDeviceMode('auto')}
+              className={`px-2 py-1 rounded-lg text-[10.5px] font-medium transition-all ${
+                deviceMode === 'auto' ? 'bg-red-600 text-white font-bold' : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Automático (Responsive)"
+            >
+              Auto
+            </button>
+            <button
+              onClick={() => setDeviceMode('desktop')}
+              className={`p-1 rounded-lg text-xs transition-all ${
+                deviceMode === 'desktop' ? 'bg-red-600 text-white' : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Vista Ordenador / Escritorio"
+            >
+              <Monitor size={14} />
+            </button>
+            <button
+              onClick={() => setDeviceMode('tablet')}
+              className={`p-1 rounded-lg text-xs transition-all ${
+                deviceMode === 'tablet' ? 'bg-red-600 text-white' : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Vista Tablet"
+            >
+              <Tablet size={14} />
+            </button>
+            <button
+              onClick={() => setDeviceMode('mobile')}
+              className={`p-1 rounded-lg text-xs transition-all ${
+                deviceMode === 'mobile' ? 'bg-red-600 text-white' : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Vista Móvil"
+            >
+              <Smartphone size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </header>

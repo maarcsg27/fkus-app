@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FKUSProvider, useFKUS } from './context/FKUSContext';
 import { TopHeader } from './components/layout/TopHeader';
 import { BottomNav } from './components/layout/BottomNav';
+import { SidebarNav } from './components/layout/SidebarNav';
 import { HomeView } from './components/views/HomeView';
 import { CalendarView } from './components/views/CalendarView';
 import { TasksView } from './components/views/TasksView';
@@ -14,9 +15,14 @@ import { GoalFormModal } from './components/goals/GoalFormModal';
 import { RoutineModal } from './components/routines/RoutineModal';
 import { GlobalSearchView } from './components/views/GlobalSearchView';
 
-const MainContent: React.FC<{ showMobileFrame: boolean; setShowMobileFrame: (val: boolean) => void }> = ({
-  showMobileFrame,
-  setShowMobileFrame,
+export type DeviceMode = 'auto' | 'desktop' | 'tablet' | 'mobile';
+
+const MainContent: React.FC<{ 
+  deviceMode: DeviceMode; 
+  setDeviceMode: (val: DeviceMode) => void 
+}> = ({
+  deviceMode,
+  setDeviceMode,
 }) => {
   const { 
     activeTab, 
@@ -24,69 +30,108 @@ const MainContent: React.FC<{ showMobileFrame: boolean; setShowMobileFrame: (val
     setIsGoalFormOpen, 
     isRoutineFormOpen, 
     setIsRoutineFormOpen,
-    routineToEdit 
+    routineToEdit,
+    setIsSearchOpen,
+    setIsCreateMenuOpen
   } = useFKUS();
 
+  // Global keyboard shortcuts (Cmd/Ctrl + K for search, N for new item)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setIsSearchOpen]);
+
+  // Determine layout based on deviceMode
+  const isForcedDesktop = deviceMode === 'desktop';
+  const isForcedTablet = deviceMode === 'tablet';
+  const isForcedMobile = deviceMode === 'mobile';
+  const isAuto = deviceMode === 'auto';
+
   return (
-    <div className={`min-h-screen bg-neutral-950 text-neutral-100 flex flex-col justify-start items-center ${showMobileFrame ? 'p-0 sm:py-6 sm:px-4' : ''}`}>
-      {/* Mobile Frame Container */}
+    <div className={`min-h-screen bg-black text-neutral-100 flex flex-col justify-start items-center ${
+      isForcedTablet ? 'py-6 px-4 bg-neutral-950' : isForcedMobile ? 'py-6 px-4 bg-neutral-950' : ''
+    }`}>
+      {/* Outer Container depending on Mode */}
       <div 
-        className={`w-full flex flex-col bg-neutral-950 relative overflow-hidden transition-all duration-300 ${
-          showMobileFrame 
-            ? 'max-w-md sm:rounded-[36px] sm:border sm:border-neutral-800 sm:shadow-2xl mobile-device-wrapper min-h-screen sm:min-h-[850px] sm:max-h-[92vh]' 
-            : 'max-w-2xl min-h-screen'
+        className={`w-full flex transition-all duration-300 ${
+          isForcedMobile
+            ? 'max-w-md min-h-[860px] rounded-[40px] border border-neutral-800 shadow-2xl overflow-hidden bg-neutral-950 flex-col relative'
+            : isForcedTablet
+              ? 'max-w-3xl min-h-[900px] rounded-[32px] border border-neutral-800 shadow-2xl overflow-hidden bg-neutral-950 flex-col relative'
+              : 'min-h-screen flex-row'
         }`}
       >
-        {/* Header with 3 dots in top right */}
-        <TopHeader showMobileFrame={showMobileFrame} setShowMobileFrame={setShowMobileFrame} />
-
-        {/* Scrollable Active View */}
-        <main className="flex-1 overflow-y-auto px-4 py-3">
-          {activeTab === 'home' && <HomeView />}
-          {activeTab === 'calendar' && <CalendarView />}
-          {activeTab === 'tasks' && <TasksView />}
-          {activeTab === 'goals' && <GoalsView />}
-          {activeTab === 'more' && <MoreView />}
-        </main>
-
-        {/* Centered Bottom Navigation (2 items | + | 2 items) */}
-        <BottomNav />
-
-        {/* Global Modals */}
-        <QuickCreateMenu />
-        <QuickAddModal />
-        <TaskDetailModal />
-        
-        {/* Global Goal & Routine Modals triggered from QuickCreateMenu */}
-        {isGoalFormOpen && (
-          <GoalFormModal
-            isOpen={isGoalFormOpen}
-            onClose={() => setIsGoalFormOpen(false)}
-          />
+        {/* Desktop Sidebar (Rendered on Desktop or forced desktop) */}
+        {(isForcedDesktop || (isAuto && !isForcedTablet && !isForcedMobile)) && (
+          <div className={isForcedDesktop ? 'block' : 'hidden lg:block'}>
+            <SidebarNav deviceMode={deviceMode} setDeviceMode={setDeviceMode} />
+          </div>
         )}
 
-        {isRoutineFormOpen && (
-          <RoutineModal
-            isOpen={isRoutineFormOpen}
-            onClose={() => setIsRoutineFormOpen(false)}
-            routineToEdit={routineToEdit}
-          />
-        )}
+        {/* Main Work Area */}
+        <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-black relative">
+          {/* Top Header */}
+          <TopHeader deviceMode={deviceMode} setDeviceMode={setDeviceMode} />
 
-        <GlobalSearchView />
+          {/* Scrollable Active View Area */}
+          <main className="flex-1 overflow-y-auto px-4 py-5 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto">
+            {activeTab === 'home' && <HomeView />}
+            {activeTab === 'calendar' && <CalendarView />}
+            {activeTab === 'tasks' && <TasksView />}
+            {activeTab === 'goals' && <GoalsView />}
+            {activeTab === 'more' && <MoreView />}
+          </main>
+
+          {/* Mobile Bottom Navigation (Shown on mobile/tablet or when forced) */}
+          {(isForcedMobile || isForcedTablet || isAuto) && (
+            <div className={isForcedMobile || isForcedTablet ? 'block' : 'lg:hidden'}>
+              <BottomNav />
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Global Modals & Overlays */}
+      <QuickCreateMenu />
+      <QuickAddModal />
+      <TaskDetailModal />
+      
+      {/* Global Goal & Routine Modals */}
+      {isGoalFormOpen && (
+        <GoalFormModal
+          isOpen={isGoalFormOpen}
+          onClose={() => setIsGoalFormOpen(false)}
+        />
+      )}
+
+      {isRoutineFormOpen && (
+        <RoutineModal
+          isOpen={isRoutineFormOpen}
+          onClose={() => setIsRoutineFormOpen(false)}
+          routineToEdit={routineToEdit}
+        />
+      )}
+
+      <GlobalSearchView />
     </div>
   );
 };
 
 export function App() {
-  const [showMobileFrame, setShowMobileFrame] = useState(true);
+  const [deviceMode, setDeviceMode] = useState<DeviceMode>('auto');
 
   return (
     <FKUSProvider>
-      <MainContent showMobileFrame={showMobileFrame} setShowMobileFrame={setShowMobileFrame} />
+      <MainContent deviceMode={deviceMode} setDeviceMode={setDeviceMode} />
     </FKUSProvider>
   );
 }
 
 export default App;
+

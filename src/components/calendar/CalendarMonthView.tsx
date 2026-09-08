@@ -89,14 +89,14 @@ export const CalendarMonthView: React.FC = () => {
             <button
               key={dStr}
               onClick={() => setSelectedDay(d)}
-              className={`min-h-[50px] p-1 flex flex-col items-center justify-start rounded-xl transition-all ${
+              className={`min-h-[56px] sm:min-h-[70px] p-1.5 flex flex-col items-center justify-start rounded-xl transition-all ${
                 isSelected
-                  ? 'bg-gradient-to-b from-emerald-500 to-teal-500 text-neutral-950 font-bold shadow-md'
+                  ? 'bg-gradient-to-b from-red-600 to-rose-600 text-white font-bold shadow-md shadow-red-600/30'
                   : isToday
-                    ? 'bg-neutral-800 text-emerald-400 font-bold border border-emerald-500/40'
+                    ? 'bg-neutral-900 text-red-400 font-bold border border-red-500/40'
                     : isCurrentMonth
-                      ? 'text-neutral-200 hover:bg-neutral-800/60'
-                      : 'text-neutral-600 hover:bg-neutral-800/30'
+                      ? 'text-neutral-200 hover:bg-neutral-900'
+                      : 'text-neutral-600 hover:bg-neutral-900/40'
               }`}
             >
               <span className="text-xs">{format(d, 'd')}</span>
@@ -111,8 +111,8 @@ export const CalendarMonthView: React.FC = () => {
                       className="w-1.5 h-1.5 rounded-full"
                       style={{ 
                         backgroundColor: isSelected 
-                          ? '#0a0a0a' 
-                          : cat?.color || '#22c55e' 
+                          ? '#ffffff' 
+                          : cat?.color || '#ef4444' 
                       }}
                     />
                   );
@@ -130,7 +130,7 @@ export const CalendarMonthView: React.FC = () => {
         </h4>
 
         {selectedDayTasks.length === 0 ? (
-          <p className="text-xs text-neutral-500 py-3 text-center bg-neutral-900/40 rounded-xl">
+          <p className="text-xs text-neutral-500 py-4 text-center bg-neutral-950 rounded-xl border border-neutral-900">
             Sin tareas en este día.
           </p>
         ) : (
@@ -143,7 +143,7 @@ export const CalendarMonthView: React.FC = () => {
                 <div
                   key={t.id}
                   onClick={() => setSelectedTaskId(t.id)}
-                  className="p-3 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-between cursor-pointer"
+                  className="p-3 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between cursor-pointer hover:border-neutral-700"
                 >
                   <div className="flex items-center space-x-2.5 min-w-0">
                     <button
@@ -152,7 +152,7 @@ export const CalendarMonthView: React.FC = () => {
                         toggleTaskStatus(t.id);
                       }}
                       className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${
-                        isDone ? 'bg-emerald-500 border-emerald-500 text-neutral-950' : 'border-neutral-600'
+                        isDone ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-600'
                       }`}
                     >
                       {isDone && <Check size={12} strokeWidth={3} />}
@@ -161,7 +161,7 @@ export const CalendarMonthView: React.FC = () => {
                       {t.title}
                     </span>
                   </div>
-                  {t.time && <span className="text-[11px] text-emerald-400 font-mono">{t.time}</span>}
+                  {t.time && <span className="text-[11px] text-red-400 font-mono">{t.time}</span>}
                 </div>
               );
             })}
