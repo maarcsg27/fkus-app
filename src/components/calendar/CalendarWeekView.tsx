@@ -9,6 +9,7 @@ import {
   Check, 
   Plus
 } from 'lucide-react';
+import { RoutineExpandableItem } from '../routines/RoutineExpandableItem';
 
 export const CalendarWeekView: React.FC = () => {
   const { 
@@ -142,31 +143,12 @@ export const CalendarWeekView: React.FC = () => {
           </span>
         </div>
 
-        {/* Routines for this day */}
+        {/* Routines for this day (Desplegables) */}
         {activeRoutinesForDay.length > 0 && (
           <div className="space-y-2">
-            {activeRoutinesForDay.map(r => {
-              const cat = getCategoryById(r.categoryId);
-              return (
-                <div 
-                  key={r.id}
-                  className="p-3 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs"
-                >
-                  <div className="flex items-center space-x-2.5">
-                    <span className="text-red-400 font-bold font-mono">{r.time}</span>
-                    <span className="font-bold text-neutral-200">{r.title}</span>
-                    {cat && (
-                      <span className="text-[10px] px-1.5 py-0.2 rounded" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
-                        {cat.name}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded-md border border-neutral-800">
-                    Rutina
-                  </span>
-                </div>
-              );
-            })}
+            {activeRoutinesForDay.map(routine => (
+              <RoutineExpandableItem key={routine.id} routine={routine} />
+            ))}
           </div>
         )}
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { formatDateSpanish, getTodayString, getDaysRemaining } from '../../utils/dateUtils';
 import { TaskItem } from '../tasks/TaskItem';
+import { RoutineExpandableItem } from '../routines/RoutineExpandableItem';
 import { OverdueSection } from '../tasks/OverdueSection';
 import { 
   Target, 
@@ -9,13 +10,15 @@ import {
   Plus, 
   Inbox, 
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Zap
 } from 'lucide-react';
 
 export const HomeView: React.FC = () => {
   const { 
     todayTasks, 
     inboxTasks, 
+    routines,
     featuredGoal, 
     setIsQuickAddOpen, 
     setSelectedGoalId,
@@ -30,6 +33,17 @@ export const HomeView: React.FC = () => {
   const filteredTodayTasks = selectedCategoryIdFilter
     ? todayTasks.filter(t => t.categoryId === selectedCategoryIdFilter)
     : todayTasks;
+
+  // Filter routines applicable to today
+  const dayOfWeekNumber = new Date().getDay();
+  const todayRoutines = routines.filter(r => {
+    if (!r.isActive) return false;
+    if (selectedCategoryIdFilter && r.categoryId !== selectedCategoryIdFilter) return false;
+    if (r.recurrence.type === 'daily') return true;
+    if (r.recurrence.type === 'weekdays') return dayOfWeekNumber >= 1 && dayOfWeekNumber <= 5;
+    if (r.recurrence.daysOfWeek) return r.recurrence.daysOfWeek.includes(dayOfWeekNumber);
+    return false;
+  });
 
   // Sort today's tasks chronologically
   const sortedTodayTasks = [...filteredTodayTasks].sort((a, b) => {
@@ -113,12 +127,30 @@ export const HomeView: React.FC = () => {
         </div>
       )}
 
+      {/* Routines for Today (Desplegables) */}
+      {todayRoutines.length > 0 && (
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+              <Zap size={13} className="text-red-500" />
+              <span>Rutinas del Día ({todayRoutines.length})</span>
+            </h2>
+          </div>
+
+          <div className="space-y-2">
+            {todayRoutines.map(routine => (
+              <RoutineExpandableItem key={routine.id} routine={routine} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* "Hoy" — Main Timed Activities and Tasks */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
             <Clock size={13} className="text-red-500" />
-            <span>Actividades de Hoy ({filteredTodayTasks.length})</span>
+            <span>Actividades y Tareas de Hoy ({filteredTodayTasks.length})</span>
           </h2>
 
           <button

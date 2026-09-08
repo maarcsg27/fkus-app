@@ -3,6 +3,7 @@ import { useFKUS } from '../../context/FKUSContext';
 import { formatDateSpanish, getTodayString } from '../../utils/dateUtils';
 import { format, addDays, subDays, parseISO } from 'date-fns';
 import { ChevronLeft, ChevronRight, Clock, Plus, Check } from 'lucide-react';
+import { RoutineExpandableItem } from '../routines/RoutineExpandableItem';
 
 export const CalendarDayView: React.FC = () => {
   const { 
@@ -90,10 +91,7 @@ export const CalendarDayView: React.FC = () => {
               {/* Slot Items */}
               <div className="flex-1 space-y-1.5">
                 {matchingRoutines.map(r => (
-                  <div key={r.id} className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center justify-between">
-                    <span className="font-semibold">⚡ {r.title} ({r.time})</span>
-                    <span className="text-[10px] text-emerald-400/70">Rutina</span>
-                  </div>
+                  <RoutineExpandableItem key={r.id} routine={r} />
                 ))}
 
                 {matchingTasks.map(t => {
