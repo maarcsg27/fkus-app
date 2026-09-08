@@ -190,13 +190,13 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const nextStatus = t.status === 'completed' ? 'pending' : 'completed';
       
       if (nextStatus === 'completed') {
-        // Trigger celebratory confetti
+        // Trigger celebratory confetti in red & white palette
         try {
           confetti({
             particleCount: 40,
             spread: 60,
             origin: { y: 0.85 },
-            colors: ['#22c55e', '#3b82f6', '#10b981', '#ffffff']
+            colors: ['#ef4444', '#dc2626', '#ffffff', '#7f1d1d']
           });
         } catch {
           // ignore

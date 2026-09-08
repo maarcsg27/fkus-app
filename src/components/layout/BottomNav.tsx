@@ -20,7 +20,7 @@ export const BottomNav: React.FC = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 max-w-lg mx-auto bg-neutral-900/95 backdrop-blur-md border-t border-neutral-800/80 px-2 py-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="fixed bottom-0 left-0 right-0 z-40 max-w-lg mx-auto bg-black/95 backdrop-blur-md border-t border-neutral-800/80 px-2 py-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <div className="grid grid-cols-5 items-center">
         {/* Left 2 items (Hoy, Calendario) */}
         {leftNavItems.map((item) => {
@@ -32,14 +32,14 @@ export const BottomNav: React.FC = () => {
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 ${
                 isActive
-                  ? 'text-emerald-400 font-medium'
+                  ? 'text-red-500 font-bold'
                   : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
               <div className="relative">
-                <Icon size={21} className={isActive ? 'stroke-[2.3]' : 'stroke-[1.8]'} />
+                <Icon size={21} className={isActive ? 'stroke-[2.5]' : 'stroke-[1.8]'} />
                 {item.badge !== undefined && (
-                  <span className="absolute -top-1 -right-2 bg-emerald-500 text-neutral-950 font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-2 bg-red-600 text-white font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                     {item.badge}
                   </span>
                 )}
@@ -54,7 +54,7 @@ export const BottomNav: React.FC = () => {
           <button
             onClick={() => setIsCreateMenuOpen(true)}
             aria-label="Añadir tarea, objetivo o rutina"
-            className="w-13 h-13 -mt-6 bg-gradient-to-tr from-emerald-500 to-teal-400 text-neutral-950 rounded-2xl shadow-lg shadow-emerald-500/25 flex items-center justify-center active:scale-95 hover:scale-105 transition-transform duration-150 border-2 border-neutral-900 focus:outline-none"
+            className="w-13 h-13 -mt-6 bg-gradient-to-tr from-red-600 to-rose-500 text-white rounded-2xl shadow-lg shadow-red-600/35 flex items-center justify-center active:scale-95 hover:scale-105 hover:brightness-110 transition-transform duration-150 border-2 border-black focus:outline-none"
             style={{ width: '3.25rem', height: '3.25rem' }}
           >
             <Plus size={28} strokeWidth={2.8} />
@@ -71,14 +71,14 @@ export const BottomNav: React.FC = () => {
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 ${
                 isActive
-                  ? 'text-emerald-400 font-medium'
+                  ? 'text-red-500 font-bold'
                   : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
               <div className="relative">
-                <Icon size={21} className={isActive ? 'stroke-[2.3]' : 'stroke-[1.8]'} />
+                <Icon size={21} className={isActive ? 'stroke-[2.5]' : 'stroke-[1.8]'} />
                 {item.badge !== undefined && (
-                  <span className="absolute -top-1 -right-2 bg-amber-500 text-neutral-950 font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-2 bg-red-600 text-white font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                     {item.badge}
                   </span>
                 )}

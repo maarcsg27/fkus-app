@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { getWeekDays, getTodayString, formatDateSpanish } from '../../utils/dateUtils';
-import { format, addWeeks, subWeeks, isSameDay, parseISO } from 'date-fns';
+import { format, addWeeks, subWeeks, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { IconRenderer } from '../common/IconRenderer';
 import { 
   ChevronLeft, 
   ChevronRight, 
-  Clock, 
   Check, 
-  Plus, 
-  Repeat, 
-  ListChecks,
-  AlertCircle
+  Plus
 } from 'lucide-react';
-import { Task } from '../../types';
 
 export const CalendarWeekView: React.FC = () => {
   const { 
     tasks, 
     routines, 
-    categories, 
     toggleTaskStatus, 
     setSelectedTaskId, 
     setIsQuickAddOpen,
@@ -46,7 +39,7 @@ export const CalendarWeekView: React.FC = () => {
   });
 
   // Filter routines applicable to selected day
-  const dayOfWeekNumber = selectedDay.getDay(); // 0 Sun, 1 Mon...
+  const dayOfWeekNumber = selectedDay.getDay();
   const activeRoutinesForDay = routines.filter(r => {
     if (!r.isActive) return false;
     if (r.recurrence.type === 'daily') return true;
@@ -74,19 +67,19 @@ export const CalendarWeekView: React.FC = () => {
               setCurrentWeekDate(new Date());
               setSelectedDay(new Date());
             }}
-            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
+            className="text-[11px] font-bold px-2.5 py-1 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800"
           >
             Hoy
           </button>
           <button
             onClick={() => setCurrentWeekDate(subWeeks(currentWeekDate, 1))}
-            className="w-7 h-7 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center"
+            className="w-7 h-7 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 flex items-center justify-center border border-neutral-800"
           >
             <ChevronLeft size={16} />
           </button>
           <button
             onClick={() => setCurrentWeekDate(addWeeks(currentWeekDate, 1))}
-            className="w-7 h-7 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center"
+            className="w-7 h-7 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 flex items-center justify-center border border-neutral-800"
           >
             <ChevronRight size={16} />
           </button>
@@ -94,7 +87,7 @@ export const CalendarWeekView: React.FC = () => {
       </div>
 
       {/* Week Strip (7 Days) */}
-      <div className="grid grid-cols-7 gap-1.5 bg-neutral-900/90 p-2 rounded-2xl border border-neutral-800">
+      <div className="grid grid-cols-7 gap-1.5 bg-neutral-950 p-2 rounded-2xl border border-neutral-800/80">
         {weekDays.map((d) => {
           const dStr = format(d, 'yyyy-MM-dd');
           const isSelected = isSameDay(d, selectedDay);
@@ -108,10 +101,10 @@ export const CalendarWeekView: React.FC = () => {
               onClick={() => setSelectedDay(d)}
               className={`flex flex-col items-center py-2 px-1 rounded-xl transition-all duration-150 ${
                 isSelected
-                  ? 'bg-gradient-to-b from-emerald-500 to-teal-500 text-neutral-950 font-bold shadow-md shadow-emerald-500/20 scale-102'
+                  ? 'bg-gradient-to-b from-red-600 to-rose-600 text-white font-black shadow-md shadow-red-600/30 scale-102'
                   : isToday
-                    ? 'bg-neutral-800/90 text-emerald-400 font-semibold border border-emerald-500/40'
-                    : 'text-neutral-400 hover:bg-neutral-800/60 hover:text-neutral-200'
+                    ? 'bg-neutral-900 text-red-400 font-bold border border-red-500/40'
+                    : 'text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200'
               }`}
             >
               <span className="text-[10px] uppercase font-semibold">
@@ -126,10 +119,10 @@ export const CalendarWeekView: React.FC = () => {
                 {dayTasksCount > 0 && (
                   <span className={`w-1.5 h-1.5 rounded-full ${
                     isSelected 
-                      ? 'bg-neutral-950' 
+                      ? 'bg-white' 
                       : hasPending 
-                        ? 'bg-emerald-400' 
-                        : 'bg-neutral-500'
+                        ? 'bg-red-500' 
+                        : 'bg-neutral-600'
                   }`} />
                 )}
               </div>
@@ -157,18 +150,18 @@ export const CalendarWeekView: React.FC = () => {
               return (
                 <div 
                   key={r.id}
-                  className="p-3 rounded-xl bg-neutral-900/60 border border-neutral-800/70 flex items-center justify-between text-xs"
+                  className="p-3 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center space-x-2.5">
-                    <span className="text-emerald-400 font-semibold font-mono">{r.time}</span>
-                    <span className="font-semibold text-neutral-200">{r.title}</span>
+                    <span className="text-red-400 font-bold font-mono">{r.time}</span>
+                    <span className="font-bold text-neutral-200">{r.title}</span>
                     {cat && (
                       <span className="text-[10px] px-1.5 py-0.2 rounded" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
                         {cat.name}
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] text-neutral-500 bg-neutral-800 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded-md border border-neutral-800">
                     Rutina
                   </span>
                 </div>
@@ -179,11 +172,11 @@ export const CalendarWeekView: React.FC = () => {
 
         {/* Tasks List */}
         {sortedDayTasks.length === 0 && activeRoutinesForDay.length === 0 ? (
-          <div className="text-center py-10 bg-neutral-900/40 rounded-2xl border border-neutral-800/60">
+          <div className="text-center py-10 bg-neutral-950 rounded-2xl border border-neutral-900">
             <p className="text-xs text-neutral-400">No hay tareas programadas para este día.</p>
             <button
               onClick={() => setIsQuickAddOpen(true)}
-              className="mt-3 text-xs font-semibold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1"
+              className="mt-3 text-xs font-bold text-red-400 hover:text-red-300 inline-flex items-center gap-1"
             >
               <Plus size={13} />
               Añadir tarea en esta fecha
@@ -201,8 +194,8 @@ export const CalendarWeekView: React.FC = () => {
                   onClick={() => setSelectedTaskId(t.id)}
                   className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                     isDone 
-                      ? 'bg-neutral-950/40 border-neutral-800/40 opacity-70' 
-                      : 'bg-neutral-900/90 border-neutral-800/80 hover:border-neutral-700'
+                      ? 'bg-neutral-950/60 border-neutral-900 opacity-70' 
+                      : 'bg-neutral-950 border-neutral-800 hover:border-neutral-700'
                   }`}
                 >
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
@@ -212,7 +205,7 @@ export const CalendarWeekView: React.FC = () => {
                         toggleTaskStatus(t.id);
                       }}
                       className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${
-                        isDone ? 'bg-emerald-500 border-emerald-500 text-neutral-950' : 'border-neutral-600 hover:border-emerald-400'
+                        isDone ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-700 hover:border-red-500'
                       }`}
                     >
                       {isDone && <Check size={12} strokeWidth={3} />}
@@ -221,7 +214,7 @@ export const CalendarWeekView: React.FC = () => {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-0.5">
                         {t.time && (
-                          <span className="text-[11px] font-semibold text-emerald-400 font-mono">
+                          <span className="text-[11px] font-bold text-red-400 font-mono">
                             {t.time}
                           </span>
                         )}

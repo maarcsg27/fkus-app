@@ -2,23 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { Priority, RecurrenceType } from '../../types';
 import { getTodayString, getTomorrowString } from '../../utils/dateUtils';
-import { IconRenderer } from '../common/IconRenderer';
 import { 
   X, 
   Calendar, 
   Clock, 
-  Tag, 
-  Flag, 
-  Target, 
-  Repeat, 
   AlignLeft, 
   Plus, 
   Check, 
   ChevronDown,
-  Sparkles,
   Inbox
 } from 'lucide-react';
-import { addDays } from 'date-fns';
 
 export const QuickAddModal: React.FC = () => {
   const { 
@@ -26,8 +19,7 @@ export const QuickAddModal: React.FC = () => {
     setIsQuickAddOpen, 
     addTask, 
     categories, 
-    goals,
-    todayTasks 
+    goals
   } = useFKUS();
 
   const [title, setTitle] = useState('');
@@ -107,23 +99,21 @@ export const QuickAddModal: React.FC = () => {
     setNewSubtaskTitle('');
   };
 
-  const selectedCategory = categories.find(c => c.id === categoryId);
-
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
+        className="w-full max-w-lg bg-neutral-950 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
       >
         {/* Top bar */}
         <div className="flex items-center justify-between px-5 pt-4 pb-2 border-b border-neutral-800/80">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
             <h3 className="text-sm font-bold text-neutral-200">Nueva Tarea</h3>
           </div>
           <button
             onClick={() => setIsQuickAddOpen(false)}
-            className="w-7 h-7 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
+            className="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
           >
             <X size={16} />
           </button>
@@ -139,7 +129,7 @@ export const QuickAddModal: React.FC = () => {
               placeholder="¿Qué tienes que hacer? (ej. Llamar al taller)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full text-base sm:text-lg font-medium bg-neutral-950/80 border border-neutral-700/80 rounded-2xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full text-base sm:text-lg font-medium bg-neutral-900/90 border border-neutral-800 rounded-2xl px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
             />
           </div>
 
@@ -148,10 +138,10 @@ export const QuickAddModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setDate(getTodayString())}
-              className={`px-3 py-1.5 rounded-xl font-medium shrink-0 transition-colors ${
+              className={`px-3 py-1.5 rounded-xl font-bold shrink-0 transition-colors ${
                 date === getTodayString()
-                  ? 'bg-emerald-500 text-neutral-950 font-semibold'
-                  : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+                  : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
               }`}
             >
               Hoy
@@ -160,10 +150,10 @@ export const QuickAddModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setDate(getTomorrowString())}
-              className={`px-3 py-1.5 rounded-xl font-medium shrink-0 transition-colors ${
+              className={`px-3 py-1.5 rounded-xl font-bold shrink-0 transition-colors ${
                 date === getTomorrowString()
-                  ? 'bg-emerald-500 text-neutral-950 font-semibold'
-                  : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+                  : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
               }`}
             >
               Mañana
@@ -172,10 +162,10 @@ export const QuickAddModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setDate(undefined)}
-              className={`px-3 py-1.5 rounded-xl font-medium shrink-0 inline-flex items-center gap-1 transition-colors ${
+              className={`px-3 py-1.5 rounded-xl font-bold shrink-0 inline-flex items-center gap-1 transition-colors ${
                 date === undefined
-                  ? 'bg-amber-500 text-neutral-950 font-semibold'
-                  : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  ? 'bg-neutral-800 text-red-400 border border-red-500/30 font-bold'
+                  : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
               }`}
             >
               <Inbox size={12} />
@@ -189,10 +179,10 @@ export const QuickAddModal: React.FC = () => {
                 onChange={(e) => setDate(e.target.value || undefined)}
                 className="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10"
               />
-              <span className={`px-3 py-1.5 rounded-xl font-medium inline-flex items-center gap-1 shrink-0 ${
+              <span className={`px-3 py-1.5 rounded-xl font-bold inline-flex items-center gap-1 shrink-0 ${
                 date && date !== getTodayString() && date !== getTomorrowString()
-                  ? 'bg-emerald-500 text-neutral-950 font-semibold'
-                  : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+                  : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
               }`}>
                 <Calendar size={12} />
                 {date && date !== getTodayString() && date !== getTomorrowString() ? date : 'Otra fecha'}
@@ -203,7 +193,7 @@ export const QuickAddModal: React.FC = () => {
           {/* Quick Row: Time & Category */}
           <div className="grid grid-cols-2 gap-3">
             {/* Time Input */}
-            <div className="flex items-center bg-neutral-950/60 border border-neutral-800 rounded-xl px-3 py-2">
+            <div className="flex items-center bg-neutral-900/70 border border-neutral-800 rounded-xl px-3 py-2">
               <Clock size={15} className="text-neutral-500 mr-2 shrink-0" />
               <input
                 type="time"
@@ -219,10 +209,10 @@ export const QuickAddModal: React.FC = () => {
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full appearance-none bg-neutral-950/60 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 pr-7"
+                className="w-full appearance-none bg-neutral-900/70 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500 pr-7"
               >
                 {categories.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-neutral-900 text-white">
+                  <option key={c.id} value={c.id} className="bg-neutral-950 text-white">
                     {c.name}
                   </option>
                 ))}
@@ -252,14 +242,14 @@ export const QuickAddModal: React.FC = () => {
                     key={p}
                     type="button"
                     onClick={() => setPriority(p)}
-                    className={`py-1.5 text-xs font-medium rounded-xl transition-all ${
+                    className={`py-1.5 text-xs font-bold rounded-xl transition-all ${
                       isSelected
                         ? p === 'urgent'
-                          ? 'bg-rose-500 text-white font-bold'
+                          ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
                           : p === 'high'
-                            ? 'bg-amber-500 text-neutral-950 font-bold'
-                            : 'bg-emerald-500 text-neutral-950 font-bold'
-                        : 'bg-neutral-800 text-neutral-400 hover:text-white'
+                            ? 'bg-rose-600 text-white shadow-sm'
+                            : 'bg-neutral-800 text-red-400 border border-red-500/30'
+                        : 'bg-neutral-900 text-neutral-400 hover:text-white'
                     }`}
                   >
                     {labels[p]}
@@ -279,13 +269,13 @@ export const QuickAddModal: React.FC = () => {
                 <select
                   value={goalId}
                   onChange={(e) => setGoalId(e.target.value)}
-                  className="w-full appearance-none bg-neutral-950/60 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-500 pr-7"
+                  className="w-full appearance-none bg-neutral-900/70 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500 pr-7"
                 >
-                  <option value="" className="bg-neutral-900 text-neutral-400">
+                  <option value="" className="bg-neutral-950 text-neutral-400">
                     -- Ningún objetivo vinculado --
                   </option>
                   {goals.map((g) => (
-                    <option key={g.id} value={g.id} className="bg-neutral-900 text-white">
+                    <option key={g.id} value={g.id} className="bg-neutral-950 text-white">
                       🎯 {g.title}
                     </option>
                   ))}
@@ -302,7 +292,7 @@ export const QuickAddModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-xs text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center gap-1"
+              className="text-xs text-red-400 hover:text-red-300 font-bold inline-flex items-center gap-1"
             >
               <AlignLeft size={13} />
               <span>{showAdvanced ? 'Ocultar notas y extras' : '+ Añadir notas / duración'}</span>
@@ -311,7 +301,7 @@ export const QuickAddModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowSubtasks(!showSubtasks)}
-              className="text-xs text-teal-400 hover:text-teal-300 font-medium inline-flex items-center gap-1"
+              className="text-xs text-neutral-300 hover:text-white font-bold inline-flex items-center gap-1"
             >
               <Plus size={13} />
               <span>{showSubtasks ? 'Ocultar checklist' : '+ Subtareas'}</span>
@@ -328,7 +318,7 @@ export const QuickAddModal: React.FC = () => {
                   placeholder="Notas adicionales (ej. preguntar precio del parachoques...)"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full text-xs bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 text-white placeholder:text-neutral-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full text-xs bg-neutral-900 border border-neutral-800 rounded-xl p-3 text-white placeholder:text-neutral-500 focus:outline-none focus:border-red-500"
                 />
               </div>
 
@@ -341,7 +331,7 @@ export const QuickAddModal: React.FC = () => {
                   <select
                     value={recurrenceType}
                     onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
-                    className="w-full bg-neutral-950/70 border border-neutral-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none"
                   >
                     <option value="none">Una sola vez</option>
                     <option value="daily">Todos los días</option>
@@ -363,7 +353,7 @@ export const QuickAddModal: React.FC = () => {
                     placeholder="ej. 30"
                     value={durationMinutes || ''}
                     onChange={(e) => setDurationMinutes(e.target.value ? Number(e.target.value) : undefined)}
-                    className="w-full bg-neutral-950/70 border border-neutral-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none"
                   />
                 </div>
               </div>
@@ -380,12 +370,12 @@ export const QuickAddModal: React.FC = () => {
               {subtasks.length > 0 && (
                 <div className="space-y-1.5 mb-2">
                   {subtasks.map((st, idx) => (
-                    <div key={st.id} className="flex items-center justify-between bg-neutral-950/50 px-3 py-1.5 rounded-lg border border-neutral-800/60 text-xs">
+                    <div key={st.id} className="flex items-center justify-between bg-neutral-900 px-3 py-1.5 rounded-lg border border-neutral-800 text-xs">
                       <span className="text-neutral-200 truncate">{st.title}</span>
                       <button
                         type="button"
                         onClick={() => setSubtasks(subtasks.filter((_, i) => i !== idx))}
-                        className="text-neutral-500 hover:text-rose-400"
+                        className="text-neutral-500 hover:text-red-400"
                       >
                         <X size={13} />
                       </button>
@@ -406,12 +396,12 @@ export const QuickAddModal: React.FC = () => {
                       handleAddSubtask();
                     }
                   }}
-                  className="flex-1 bg-neutral-950/70 border border-neutral-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
+                  className="flex-1 bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500"
                 />
                 <button
                   type="button"
                   onClick={handleAddSubtask}
-                  className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs text-white rounded-xl font-medium"
+                  className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs text-white rounded-xl font-bold"
                 >
                   +
                 </button>
@@ -421,11 +411,11 @@ export const QuickAddModal: React.FC = () => {
         </form>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-neutral-800/80 bg-neutral-900/90 flex items-center justify-between gap-3">
+        <div className="p-4 border-t border-neutral-800/80 bg-neutral-950 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => setIsQuickAddOpen(false)}
-            className="px-4 py-2.5 rounded-xl text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+            className="px-4 py-2.5 rounded-xl text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors"
           >
             Cancelar
           </button>
@@ -433,10 +423,10 @@ export const QuickAddModal: React.FC = () => {
           <button
             onClick={() => handleSave()}
             disabled={!title.trim()}
-            className={`flex-1 py-2.5 px-5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg transition-all ${
+            className={`flex-1 py-2.5 px-5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg transition-all ${
               title.trim()
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-neutral-950 hover:brightness-110 shadow-emerald-500/20 active:scale-98'
-                : 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white hover:brightness-110 shadow-red-600/30 active:scale-98'
+                : 'bg-neutral-900 text-neutral-600 cursor-not-allowed'
             }`}
           >
             <Check size={16} strokeWidth={2.8} />

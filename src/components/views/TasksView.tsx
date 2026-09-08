@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { TaskItem } from '../tasks/TaskItem';
 import { RoutineCard } from '../routines/RoutineCard';
-import { Routine } from '../../types';
 import { 
   Inbox, 
   Calendar, 
@@ -58,7 +57,7 @@ export const TasksView: React.FC = () => {
       {/* Header with Title and Add Buttons */}
       <div className="flex items-center justify-between px-1 pt-1">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             Tareas y Rutinas
           </h1>
           <p className="text-xs text-neutral-400">
@@ -79,7 +78,7 @@ export const TasksView: React.FC = () => {
                 setRoutineToEdit(null);
                 setIsRoutineFormOpen(true);
               }}
-              className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs inline-flex items-center gap-1 shadow-sm"
+              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs inline-flex items-center gap-1 shadow-sm shadow-red-600/20"
             >
               <Plus size={14} />
               <span>Nueva Rutina</span>
@@ -87,7 +86,7 @@ export const TasksView: React.FC = () => {
           ) : (
             <button
               onClick={() => setIsQuickAddOpen(true)}
-              className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs inline-flex items-center gap-1 shadow-sm"
+              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs inline-flex items-center gap-1 shadow-sm shadow-red-600/20"
             >
               <Plus size={14} />
               <span>Nueva Tarea</span>
@@ -105,23 +104,19 @@ export const TasksView: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id)}
-              className={`px-3 py-1.5 rounded-xl font-medium shrink-0 inline-flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-xl font-bold shrink-0 inline-flex items-center gap-1.5 transition-all ${
                 isSelected
-                  ? tab.id === 'overdue' && tab.count && tab.count > 0
-                    ? 'bg-rose-500 text-white font-bold'
-                    : 'bg-emerald-500 text-neutral-950 font-bold shadow-sm'
-                  : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+                  : 'bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-900'
               }`}
             >
               <Icon size={13} />
               <span>{tab.label}</span>
               {tab.count !== undefined && tab.count > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
                   isSelected 
-                    ? 'bg-black/20 text-current' 
-                    : tab.id === 'overdue' 
-                      ? 'bg-rose-500/20 text-rose-400' 
-                      : 'bg-neutral-800 text-neutral-300'
+                    ? 'bg-black/30 text-white' 
+                    : 'bg-neutral-900 text-neutral-300'
                 }`}>
                   {tab.count}
                 </span>
@@ -137,9 +132,9 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'inbox' && (
           <div>
             {filterByCat(inboxTasks).length === 0 ? (
-              <div className="text-center py-12 bg-neutral-900/40 rounded-2xl border border-neutral-800/60 p-4">
-                <div className="w-10 h-10 rounded-2xl bg-neutral-800 text-neutral-400 flex items-center justify-center mx-auto mb-2">
-                  <Inbox size={20} />
+              <div className="text-center py-12 bg-neutral-950 rounded-2xl border border-neutral-900 p-4">
+                <div className="w-10 h-10 rounded-2xl bg-neutral-900 text-neutral-400 flex items-center justify-center mx-auto mb-2">
+                  <Inbox size={20} className="text-red-500" />
                 </div>
                 <p className="text-sm font-bold text-neutral-200">Inbox limpio</p>
                 <p className="text-xs text-neutral-400 mt-1 max-w-xs mx-auto">
@@ -160,7 +155,7 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'today' && (
           <div className="space-y-2.5">
             {filterByCat(todayTasks).length === 0 ? (
-              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-900/40 rounded-xl">
+              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-950 rounded-xl border border-neutral-900">
                 No hay tareas para hoy.
               </p>
             ) : (
@@ -175,7 +170,7 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'all' && (
           <div className="space-y-2.5">
             {filterByCat(activeAllTasks).length === 0 ? (
-              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-900/40 rounded-xl">
+              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-950 rounded-xl border border-neutral-900">
                 No hay tareas pendientes activas.
               </p>
             ) : (
@@ -190,7 +185,7 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'recurrent' && (
           <div className="space-y-2.5">
             {filterByCat(recurrentTasks).length === 0 ? (
-              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-900/40 rounded-xl">
+              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-950 rounded-xl border border-neutral-900">
                 No tienes tareas recurrentes creadas.
               </p>
             ) : (
@@ -205,14 +200,14 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'routines' && (
           <div className="space-y-3">
             {routines.length === 0 ? (
-              <div className="text-center py-10 bg-neutral-900/40 rounded-2xl border border-neutral-800/60">
+              <div className="text-center py-10 bg-neutral-950 rounded-2xl border border-neutral-900">
                 <p className="text-xs text-neutral-400">No hay rutinas creadas.</p>
                 <button
                   onClick={() => {
                     setRoutineToEdit(null);
                     setIsRoutineFormOpen(true);
                   }}
-                  className="mt-3 px-4 py-2 bg-emerald-500 text-neutral-950 font-bold text-xs rounded-xl"
+                  className="mt-3 px-4 py-2 bg-red-600 text-white font-bold text-xs rounded-xl"
                 >
                   + Crear primera rutina
                 </button>
@@ -237,8 +232,8 @@ export const TasksView: React.FC = () => {
           <div>
             <OverdueSection />
             {overdueTasks.length === 0 && (
-              <div className="text-center py-10 bg-neutral-900/40 rounded-2xl border border-neutral-800/60">
-                <p className="text-xs text-emerald-400 font-bold">¡Estupendo! No tienes tareas atrasadas.</p>
+              <div className="text-center py-10 bg-neutral-950 rounded-2xl border border-neutral-900">
+                <p className="text-xs text-red-400 font-bold">¡Estupendo! No tienes tareas atrasadas.</p>
               </div>
             )}
           </div>
@@ -248,7 +243,7 @@ export const TasksView: React.FC = () => {
         {activeSubTab === 'history' && (
           <div className="space-y-2.5">
             {filterByCat(completedTasks).length === 0 ? (
-              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-900/40 rounded-xl">
+              <p className="text-xs text-neutral-500 text-center py-8 bg-neutral-950 rounded-xl border border-neutral-900">
                 Aún no has completado tareas.
               </p>
             ) : (

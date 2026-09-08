@@ -21,20 +21,20 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
   const activeCategory = categories.find(c => c.id === selectedCategoryIdFilter);
 
   return (
-    <header className="sticky top-0 z-30 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3">
+    <header className="sticky top-0 z-30 bg-black/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3">
       <div className="flex items-center justify-between">
         {/* Brand */}
         <div 
           onClick={() => setActiveTab('home')}
-          className="flex items-center space-x-2.5 cursor-pointer select-none"
+          className="flex items-center space-x-2.5 cursor-pointer select-none group"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-neutral-950 font-black text-base shadow-sm">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white font-black text-base shadow-sm shadow-red-600/20 group-hover:scale-105 transition-transform">
             F
           </div>
           <div>
             <div className="flex items-center space-x-1.5">
-              <span className="font-extrabold text-base tracking-wider text-white">FKUS</span>
-              <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400">
+              <span className="font-black text-base tracking-wider text-white">FKUS</span>
+              <span className="text-[9.5px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
                 PRO
               </span>
             </div>
@@ -50,7 +50,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
           {activeCategory && (
             <button
               onClick={() => setSelectedCategoryIdFilter(null)}
-              className="flex items-center space-x-1 text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+              className="flex items-center space-x-1 text-xs px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400"
             >
               <IconRenderer name={activeCategory.icon} size={12} color={activeCategory.color} />
               <span className="font-medium max-w-[80px] truncate">{activeCategory.name}</span>
@@ -61,19 +61,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
           {/* Quick Category Filter Selector */}
           <div className="relative group">
             <button
-              className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 flex items-center justify-center transition-colors"
               title="Filtrar por categoría"
             >
               <Filter size={15} />
             </button>
-            <div className="absolute right-0 top-full mt-1.5 w-48 py-1.5 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all z-50">
+            <div className="absolute right-0 top-full mt-1.5 w-48 py-1.5 bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all z-50">
               <div className="px-3 py-1 text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
                 Categorías
               </div>
               <button
                 onClick={() => setSelectedCategoryIdFilter(null)}
-                className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between hover:bg-neutral-800 transition-colors ${
-                  !selectedCategoryIdFilter ? 'text-emerald-400 font-semibold bg-emerald-500/10' : 'text-neutral-300'
+                className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between hover:bg-neutral-900 transition-colors ${
+                  !selectedCategoryIdFilter ? 'text-red-400 font-bold bg-red-500/10' : 'text-neutral-300'
                 }`}
               >
                 <span>Todas</span>
@@ -83,8 +83,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
                 <button
                   key={c.id}
                   onClick={() => setSelectedCategoryIdFilter(c.id)}
-                  className={`w-full text-left px-3 py-1.5 text-xs flex items-center space-x-2 hover:bg-neutral-800 transition-colors ${
-                    selectedCategoryIdFilter === c.id ? 'text-emerald-400 font-semibold bg-emerald-500/10' : 'text-neutral-300'
+                  className={`w-full text-left px-3 py-1.5 text-xs flex items-center space-x-2 hover:bg-neutral-900 transition-colors ${
+                    selectedCategoryIdFilter === c.id ? 'text-red-400 font-bold bg-red-500/10' : 'text-neutral-300'
                   }`}
                 >
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: c.color }} />
@@ -97,19 +97,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
           {/* Search Trigger */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 flex items-center justify-center transition-colors"
             title="Buscar (Tareas, Rutinas, Objetivos)"
           >
             <Search size={15} />
           </button>
 
-          {/* Más / Ajustes Button (Moved to Top Right) */}
+          {/* Más / Ajustes Button */}
           <button
             onClick={() => setActiveTab(activeTab === 'more' ? 'home' : 'more')}
-            className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
+            className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-all ${
               activeTab === 'more'
-                ? 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-sm'
-                : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                ? 'bg-red-600 text-white border-red-500 shadow-sm shadow-red-600/30'
+                : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700'
             }`}
             title="Más / Ajustes / Categorías"
           >
@@ -119,7 +119,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showMobileFrame, setShowMo
           {/* Desktop Preview Frame Toggle */}
           <button
             onClick={() => setShowMobileFrame(!showMobileFrame)}
-            className="hidden lg:flex items-center text-[11px] font-medium px-2 py-1 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition-colors"
+            className="hidden lg:flex items-center text-[11px] font-medium px-2 py-1 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-400 hover:text-white transition-colors"
             title="Cambiar entre vista móvil y pantalla completa"
           >
             {showMobileFrame ? 'Expandir' : 'Móvil'}

@@ -3,7 +3,7 @@ import { Goal } from '../../types';
 import { useFKUS } from '../../context/FKUSContext';
 import { IconRenderer } from '../common/IconRenderer';
 import { getDaysRemaining } from '../../utils/dateUtils';
-import { Target, Calendar, CheckCircle2, Circle, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 interface GoalCardProps {
   goal: Goal;
@@ -19,7 +19,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
   return (
     <div 
       onClick={() => onClick ? onClick() : setSelectedGoalId(goal.id)}
-      className="p-4 rounded-2xl bg-neutral-900/80 border border-neutral-800/80 hover:border-teal-500/40 cursor-pointer transition-all duration-150 shadow-subtle hover:shadow-card group"
+      className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800/80 hover:border-red-500/50 cursor-pointer transition-all duration-150 shadow-subtle hover:shadow-card group"
     >
       {/* Top row: Category & Days remaining */}
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -33,12 +33,12 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
           </span>
         )}
 
-        <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
+        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full ${
           countdown.isPast
-            ? 'text-rose-400 bg-rose-500/15'
+            ? 'text-red-400 bg-red-500/15 border border-red-500/20'
             : countdown.days <= 14
-              ? 'text-amber-400 bg-amber-500/15'
-              : 'text-teal-400 bg-teal-500/10'
+              ? 'text-rose-400 bg-rose-500/15 border border-rose-500/20'
+              : 'text-red-400 bg-neutral-900 border border-neutral-800'
         }`}>
           <Clock size={11} />
           {countdown.label}
@@ -46,7 +46,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
       </div>
 
       {/* Title */}
-      <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition-colors tracking-tight">
+      <h3 className="text-base font-black text-white group-hover:text-red-400 transition-colors tracking-tight">
         {goal.title}
       </h3>
 
@@ -60,12 +60,12 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
       {/* Activity Status (Explicitly: X completadas · Y pendientes) */}
       <div className="mt-3 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs text-neutral-400">
         <span className="flex items-center gap-1.5 font-medium text-neutral-300">
-          <span className="text-emerald-400 font-bold">{stats.completed}</span> completadas
+          <span className="text-red-500 font-bold">{stats.completed}</span> completadas
           <span className="text-neutral-600">·</span>
-          <span className="text-amber-400 font-bold">{stats.pending}</span> pendientes
+          <span className="text-neutral-400 font-medium">{stats.pending} pendientes</span>
         </span>
 
-        <span className="text-[11px] text-teal-400/80 group-hover:text-teal-300 font-medium">
+        <span className="text-[11px] text-red-400 font-bold group-hover:underline">
           Ver tareas →
         </span>
       </div>

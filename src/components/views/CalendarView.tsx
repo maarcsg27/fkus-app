@@ -3,7 +3,7 @@ import { CalendarWeekView } from '../calendar/CalendarWeekView';
 import { CalendarDayView } from '../calendar/CalendarDayView';
 import { CalendarMonthView } from '../calendar/CalendarMonthView';
 import { useFKUS } from '../../context/FKUSContext';
-import { Plus, Calendar as CalIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export const CalendarView: React.FC = () => {
   const [calendarMode, setCalendarMode] = useState<'week' | 'day' | 'month'>('week');
@@ -13,12 +13,12 @@ export const CalendarView: React.FC = () => {
     <div className="space-y-4 pb-20 animate-in fade-in duration-150">
       {/* View Switcher Bar */}
       <div className="flex items-center justify-between px-1 pt-1">
-        <div className="flex items-center space-x-1 bg-neutral-900/90 p-1 rounded-2xl border border-neutral-800">
+        <div className="flex items-center space-x-1 bg-neutral-950 p-1 rounded-2xl border border-neutral-800">
           <button
             onClick={() => setCalendarMode('week')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               calendarMode === 'week'
-                ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
                 : 'text-neutral-400 hover:text-white'
             }`}
           >
@@ -29,7 +29,7 @@ export const CalendarView: React.FC = () => {
             onClick={() => setCalendarMode('day')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               calendarMode === 'day'
-                ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
                 : 'text-neutral-400 hover:text-white'
             }`}
           >
@@ -40,7 +40,7 @@ export const CalendarView: React.FC = () => {
             onClick={() => setCalendarMode('month')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               calendarMode === 'month'
-                ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
                 : 'text-neutral-400 hover:text-white'
             }`}
           >
@@ -50,9 +50,9 @@ export const CalendarView: React.FC = () => {
 
         <button
           onClick={() => setIsQuickAddOpen(true)}
-          className="px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold inline-flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-200 text-xs font-bold border border-neutral-800 inline-flex items-center gap-1.5"
         >
-          <Plus size={14} />
+          <Plus size={14} className="text-red-500" />
           <span>Planificar</span>
         </button>
       </div>

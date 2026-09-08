@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { Routine, RoutineStep, RecurrenceType } from '../../types';
-import { X, Plus, Trash2, Clock, Check, ChevronDown } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 
 interface RoutineModalProps {
   isOpen: boolean;
@@ -91,19 +91,22 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
+        className="w-full max-w-lg bg-neutral-950 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-neutral-800">
-          <h3 className="text-sm font-bold text-white">
-            {routineToEdit ? 'Editar Rutina' : 'Nueva Rutina'}
-          </h3>
+          <div className="flex items-center space-x-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+            <h3 className="text-sm font-bold text-white">
+              {routineToEdit ? 'Editar Rutina' : 'Nueva Rutina'}
+            </h3>
+          </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center"
+            className="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center"
           >
             <X size={16} />
           </button>
@@ -120,7 +123,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
               placeholder="ej. Rutina de mañana o Rutina gimnasio"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-red-500 font-medium"
             />
           </div>
 
@@ -133,7 +136,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -144,10 +147,10 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
               >
                 {categories.map(c => (
-                  <option key={c.id} value={c.id} className="bg-neutral-900">
+                  <option key={c.id} value={c.id} className="bg-neutral-950">
                     {c.name}
                   </option>
                 ))}
@@ -161,7 +164,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
               <select
                 value={recurrenceType}
                 onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
               >
                 <option value="daily">Todos los días</option>
                 <option value="weekdays">Lunes a Viernes</option>
@@ -179,7 +182,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
               placeholder="ej. Despertar con energía antes de trabajar"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
             />
           </div>
 
@@ -191,8 +194,8 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
 
             <div className="space-y-2">
               {steps.map((step, idx) => (
-                <div key={step.id || idx} className="flex items-center gap-2 bg-neutral-950 px-3 py-2 rounded-xl border border-neutral-800">
-                  <span className="text-emerald-400 font-mono text-xs font-bold w-4">
+                <div key={step.id || idx} className="flex items-center gap-2 bg-neutral-900 px-3 py-2 rounded-xl border border-neutral-800">
+                  <span className="text-red-500 font-mono text-xs font-bold w-4">
                     {idx + 1}.
                   </span>
                   <span className="flex-1 text-xs text-neutral-200 truncate">{step.title}</span>
@@ -202,7 +205,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
                   <button
                     type="button"
                     onClick={() => handleRemoveStep(step.id)}
-                    className="text-neutral-500 hover:text-rose-400 p-1"
+                    className="text-neutral-500 hover:text-red-400 p-1"
                   >
                     <Trash2 size={13} />
                   </button>
@@ -223,7 +226,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
                     handleAddStep();
                   }
                 }}
-                className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+                className="flex-1 bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500"
               />
               <input
                 type="number"
@@ -232,12 +235,12 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
                 placeholder="Min"
                 value={newStepDuration || ''}
                 onChange={(e) => setNewStepDuration(e.target.value ? Number(e.target.value) : undefined)}
-                className="w-16 bg-neutral-950 border border-neutral-800 rounded-xl px-2 py-2 text-xs text-white text-center focus:outline-none"
+                className="w-16 bg-neutral-900 border border-neutral-800 rounded-xl px-2 py-2 text-xs text-white text-center focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleAddStep}
-                className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white rounded-xl"
+                className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold text-white rounded-xl"
               >
                 +
               </button>
@@ -246,7 +249,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-neutral-800 bg-neutral-900 flex items-center justify-end gap-3">
+        <div className="p-4 border-t border-neutral-800 bg-neutral-950 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -258,7 +261,7 @@ export const RoutineModal: React.FC<RoutineModalProps> = ({ isOpen, onClose, rou
             type="button"
             onClick={handleSave}
             disabled={!title.trim()}
-            className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-neutral-950 font-bold text-xs rounded-xl shadow-md disabled:opacity-50"
+            className="px-5 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-xs rounded-xl shadow-md shadow-red-600/20 disabled:opacity-50"
           >
             Guardar Rutina
           </button>

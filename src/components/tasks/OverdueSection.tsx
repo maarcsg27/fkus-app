@@ -12,24 +12,24 @@ export const OverdueSection: React.FC = () => {
   if (overdueTasks.length === 0) return null;
 
   return (
-    <div className="mb-6 rounded-2xl bg-gradient-to-b from-rose-950/40 to-neutral-900/80 border border-rose-500/30 p-4 shadow-sm">
+    <div className="mb-6 rounded-2xl bg-neutral-950 border border-red-600/40 p-4 shadow-sm">
       {/* Header */}
       <div 
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center justify-between cursor-pointer select-none"
       >
         <div className="flex items-center space-x-2">
-          <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-red-500/20 text-red-500 flex items-center justify-center">
             <AlertCircle size={17} />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-rose-300 flex items-center gap-1.5">
+            <h3 className="text-sm font-black text-red-400 flex items-center gap-1.5">
               <span>Tareas Atrasadas</span>
-              <span className="text-xs px-2 py-0.2 rounded-full bg-rose-500/20 text-rose-400 font-extrabold">
+              <span className="text-xs px-2 py-0.2 rounded-full bg-red-500/20 text-red-400 font-black">
                 {overdueTasks.length}
               </span>
             </h3>
-            <p className="text-[11px] text-rose-200/70">
+            <p className="text-[11px] text-neutral-400">
               No dejes que se acumulen. Reprograma o completa en 1 toque.
             </p>
           </div>
@@ -57,7 +57,7 @@ export const OverdueSection: React.FC = () => {
                     className="flex-1 cursor-pointer"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">
+                      <span className="text-[11px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
                         {getRelativeDateLabel(task.date)}
                       </span>
                       {category && (
@@ -78,14 +78,14 @@ export const OverdueSection: React.FC = () => {
                     <button
                       onClick={() => toggleTaskStatus(task.id)}
                       title="Marcar completada"
-                      className="w-7 h-7 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center transition-colors"
+                      className="w-7 h-7 rounded-lg bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white flex items-center justify-center transition-all"
                     >
                       <Check size={14} strokeWidth={2.5} />
                     </button>
                     <button
                       onClick={() => deleteTask(task.id)}
                       title="Eliminar"
-                      className="w-7 h-7 rounded-lg bg-neutral-800 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 flex items-center justify-center transition-colors"
+                      className="w-7 h-7 rounded-lg bg-neutral-800 hover:bg-red-500/20 text-neutral-400 hover:text-red-400 flex items-center justify-center transition-colors"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -93,14 +93,14 @@ export const OverdueSection: React.FC = () => {
                 </div>
 
                 {/* Quick Reschedule Buttons */}
-                <div className="pt-2 border-t border-neutral-800/80 flex items-center gap-1.5 flex-wrap">
+                <div className="pt-2 border-t border-neutral-800 flex items-center gap-1.5 flex-wrap">
                   <span className="text-[10.5px] font-semibold text-neutral-400 mr-1">
                     Mover a:
                   </span>
                   
                   <button
                     onClick={() => quickRescheduleTask(task.id, 'today')}
-                    className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors"
+                    className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 transition-colors"
                   >
                     Hoy
                   </button>
@@ -138,7 +138,7 @@ export const OverdueSection: React.FC = () => {
                             setCustomDatePickerId(null);
                           }
                         }}
-                        className="text-xs bg-neutral-950 border border-neutral-700 rounded-lg px-2.5 py-1 text-white focus:outline-none focus:border-emerald-500"
+                        className="text-xs bg-black border border-neutral-700 rounded-lg px-2.5 py-1 text-white focus:outline-none focus:border-red-500"
                       />
                       <button
                         onClick={() => setCustomDatePickerId(null)}

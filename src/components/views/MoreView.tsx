@@ -6,11 +6,7 @@ import {
   Search, 
   Download, 
   Upload, 
-  RotateCcw, 
-  ShieldCheck, 
-  Sparkles, 
-  ExternalLink,
-  Check
+  RotateCcw
 } from 'lucide-react';
 import { CategoriesModal } from './CategoriesModal';
 import { StatsModal } from './StatsModal';
@@ -63,7 +59,7 @@ export const MoreView: React.FC = () => {
     <div className="space-y-5 pb-20 animate-in fade-in duration-150">
       {/* Header */}
       <div className="pt-1 px-1">
-        <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
           Más y Ajustes
         </h1>
         <p className="text-xs text-neutral-400">
@@ -76,14 +72,14 @@ export const MoreView: React.FC = () => {
         {/* Categories Manager */}
         <button
           onClick={() => setIsCategoryModalOpen(true)}
-          className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 flex items-center justify-between transition-all group"
+          className="w-full p-4 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-red-500/50 flex items-center justify-between transition-all group"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-600/10 text-red-500 flex items-center justify-center">
               <Tag size={20} />
             </div>
             <div className="text-left">
-              <h4 className="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+              <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
                 Categorías personalizadas
               </h4>
               <p className="text-xs text-neutral-400">
@@ -91,20 +87,20 @@ export const MoreView: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm">→</span>
+          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm font-bold">→</span>
         </button>
 
         {/* Action Stats */}
         <button
           onClick={() => setIsStatsModalOpen(true)}
-          className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 flex items-center justify-between transition-all group"
+          className="w-full p-4 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-red-500/50 flex items-center justify-between transition-all group"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-600/10 text-red-500 flex items-center justify-center">
               <BarChart3 size={20} />
             </div>
             <div className="text-left">
-              <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+              <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
                 Estadísticas de Acción
               </h4>
               <p className="text-xs text-neutral-400">
@@ -112,20 +108,20 @@ export const MoreView: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm">→</span>
+          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm font-bold">→</span>
         </button>
 
         {/* Global Search */}
         <button
           onClick={() => setIsSearchOpen(true)}
-          className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 flex items-center justify-between transition-all group"
+          className="w-full p-4 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-red-500/50 flex items-center justify-between transition-all group"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-600/10 text-red-500 flex items-center justify-center">
               <Search size={20} />
             </div>
             <div className="text-left">
-              <h4 className="text-sm font-bold text-white group-hover:text-teal-300 transition-colors">
+              <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
                 Buscador Global
               </h4>
               <p className="text-xs text-neutral-400">
@@ -133,7 +129,7 @@ export const MoreView: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm">→</span>
+          <span className="text-neutral-500 group-hover:text-white transition-colors text-sm font-bold">→</span>
         </button>
       </div>
 
@@ -143,10 +139,10 @@ export const MoreView: React.FC = () => {
           Datos y Privacidad
         </h3>
 
-        <div className="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-3">
+        <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2.5">
-              <Download size={17} className="text-emerald-400" />
+              <Download size={17} className="text-red-500" />
               <div>
                 <h5 className="text-xs font-bold text-white">Exportar datos (JSON)</h5>
                 <p className="text-[11px] text-neutral-400">Guarda una copia de seguridad en tu dispositivo.</p>
@@ -154,7 +150,7 @@ export const MoreView: React.FC = () => {
             </div>
             <button
               onClick={handleExport}
-              className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white rounded-xl"
+              className="px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-xs font-bold text-white rounded-xl border border-neutral-800"
             >
               {copySuccess ? '✓ Descargado' : 'Exportar'}
             </button>
@@ -162,13 +158,13 @@ export const MoreView: React.FC = () => {
 
           <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
             <div className="flex items-center space-x-2.5">
-              <Upload size={17} className="text-teal-400" />
+              <Upload size={17} className="text-red-500" />
               <div>
                 <h5 className="text-xs font-bold text-white">Importar respaldo</h5>
                 <p className="text-[11px] text-neutral-400">Restaura tus datos desde un archivo JSON.</p>
               </div>
             </div>
-            <label className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white rounded-xl cursor-pointer">
+            <label className="px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-xs font-bold text-white rounded-xl border border-neutral-800 cursor-pointer">
               Importar
               <input
                 type="file"
@@ -180,14 +176,14 @@ export const MoreView: React.FC = () => {
           </div>
 
           {importStatus && (
-            <p className="text-xs text-emerald-400 font-semibold pt-1">
+            <p className="text-xs text-red-400 font-bold pt-1">
               {importStatus}
             </p>
           )}
 
           <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
             <div className="flex items-center space-x-2.5">
-              <RotateCcw size={17} className="text-amber-400" />
+              <RotateCcw size={17} className="text-neutral-400" />
               <div>
                 <h5 className="text-xs font-bold text-white">Restaurar ejemplos iniciales</h5>
                 <p className="text-[11px] text-neutral-400">Recarga las tareas y objetivos del ejemplo.</p>
@@ -199,7 +195,7 @@ export const MoreView: React.FC = () => {
                   resetToDefaults();
                 }
               }}
-              className="px-3 py-1.5 bg-neutral-800 hover:bg-amber-500/20 text-xs font-semibold text-neutral-300 hover:text-amber-400 rounded-xl"
+              className="px-3 py-1.5 bg-neutral-900 hover:bg-red-500/20 text-xs font-bold text-neutral-300 hover:text-red-400 rounded-xl border border-neutral-800"
             >
               Restaurar
             </button>
@@ -208,12 +204,12 @@ export const MoreView: React.FC = () => {
       </div>
 
       {/* Manifest & Philosophy Banner */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-950 border border-neutral-800 text-center space-y-1.5">
-        <span className="text-lg font-black tracking-widest text-emerald-400">FKUS</span>
-        <p className="text-xs font-medium text-neutral-300">
+      <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 text-center space-y-1.5">
+        <span className="text-lg font-black tracking-widest text-red-500">FKUS</span>
+        <p className="text-xs font-bold text-white">
           "Apúntalo. Organízalo. Hazlo."
         </p>
-        <p className="text-[11px] text-neutral-500 max-w-xs mx-auto leading-relaxed">
+        <p className="text-[11px] text-neutral-400 max-w-xs mx-auto leading-relaxed">
           Diseñado para ahorrar tiempo, no para consumirlo. Entra, haz lo que tienes que hacer y continúa con tu día.
         </p>
       </div>

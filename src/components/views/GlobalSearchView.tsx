@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
-import { Search, X, CheckSquare, Zap, Target, Tag, ArrowRight } from 'lucide-react';
+import { Search, X, CheckSquare, Zap, Target, Tag } from 'lucide-react';
 import { IconRenderer } from '../common/IconRenderer';
 
 export const GlobalSearchView: React.FC = () => {
@@ -13,7 +13,6 @@ export const GlobalSearchView: React.FC = () => {
     categories,
     setSelectedTaskId,
     setSelectedGoalId,
-    setSelectedRoutineId,
     setSelectedCategoryIdFilter,
     setActiveTab,
     getCategoryById 
@@ -51,8 +50,7 @@ export const GlobalSearchView: React.FC = () => {
 
   const matchingGoals = q
     ? goals.filter(g =>
-        g.title.toLowerCase().includes(g.title.toLowerCase().includes(q) ? q : '') ||
-        g.title.toLowerCase().includes(q) ||
+        g.title.toLowerCase().includes(q) || 
         (g.description && g.description.toLowerCase().includes(q)) ||
         (g.notes && g.notes.toLowerCase().includes(q))
       )
@@ -68,11 +66,11 @@ export const GlobalSearchView: React.FC = () => {
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center p-3 sm:p-6 animate-in fade-in duration-150">
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] mt-6"
+        className="w-full max-w-lg bg-neutral-950 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] mt-6"
       >
         {/* Search Input Header */}
-        <div className="flex items-center space-x-3 px-4 py-3.5 border-b border-neutral-800 bg-neutral-950/80">
-          <Search size={18} className="text-emerald-400 shrink-0" />
+        <div className="flex items-center space-x-3 px-4 py-3.5 border-b border-neutral-800 bg-neutral-900/60">
+          <Search size={18} className="text-red-500 shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -84,14 +82,14 @@ export const GlobalSearchView: React.FC = () => {
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="text-xs text-neutral-500 hover:text-neutral-300"
+              className="text-xs text-neutral-400 hover:text-white"
             >
               Borrar
             </button>
           )}
           <button
             onClick={() => setIsSearchOpen(false)}
-            className="w-7 h-7 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center shrink-0"
+            className="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center shrink-0"
           >
             <X size={15} />
           </button>
@@ -113,7 +111,7 @@ export const GlobalSearchView: React.FC = () => {
               {matchingTasks.length > 0 && (
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2 flex items-center gap-1.5">
-                    <CheckSquare size={12} className="text-emerald-400" />
+                    <CheckSquare size={12} className="text-red-500" />
                     <span>Tareas ({matchingTasks.length})</span>
                   </h4>
                   <div className="space-y-1.5">
@@ -126,7 +124,7 @@ export const GlobalSearchView: React.FC = () => {
                             setSelectedTaskId(t.id);
                             setIsSearchOpen(false);
                           }}
-                          className="p-2.5 rounded-xl bg-neutral-950/80 border border-neutral-800 hover:border-emerald-500/50 flex items-center justify-between cursor-pointer text-xs"
+                          className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 hover:border-red-500/60 flex items-center justify-between cursor-pointer text-xs"
                         >
                           <div className="flex-1 min-w-0">
                             <span className="font-medium text-neutral-200 block truncate">{t.title}</span>
@@ -150,7 +148,7 @@ export const GlobalSearchView: React.FC = () => {
               {matchingGoals.length > 0 && (
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2 flex items-center gap-1.5">
-                    <Target size={12} className="text-teal-400" />
+                    <Target size={12} className="text-rose-400" />
                     <span>Objetivos ({matchingGoals.length})</span>
                   </h4>
                   <div className="space-y-1.5">
@@ -161,10 +159,10 @@ export const GlobalSearchView: React.FC = () => {
                           setSelectedGoalId(g.id);
                           setIsSearchOpen(false);
                         }}
-                        className="p-2.5 rounded-xl bg-neutral-950/80 border border-neutral-800 hover:border-teal-500/50 flex items-center justify-between cursor-pointer text-xs"
+                        className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 hover:border-red-500/60 flex items-center justify-between cursor-pointer text-xs"
                       >
                         <div className="flex-1 min-w-0">
-                          <span className="font-medium text-teal-300 block truncate">{g.title}</span>
+                          <span className="font-bold text-rose-300 block truncate">{g.title}</span>
                           {g.description && (
                             <span className="text-[11px] text-neutral-500 block truncate">{g.description}</span>
                           )}
@@ -180,7 +178,7 @@ export const GlobalSearchView: React.FC = () => {
               {matchingRoutines.length > 0 && (
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2 flex items-center gap-1.5">
-                    <Zap size={12} className="text-amber-400" />
+                    <Zap size={12} className="text-red-400" />
                     <span>Rutinas ({matchingRoutines.length})</span>
                   </h4>
                   <div className="space-y-1.5">
@@ -191,10 +189,10 @@ export const GlobalSearchView: React.FC = () => {
                           setActiveTab('tasks');
                           setIsSearchOpen(false);
                         }}
-                        className="p-2.5 rounded-xl bg-neutral-950/80 border border-neutral-800 hover:border-amber-500/50 flex items-center justify-between cursor-pointer text-xs"
+                        className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 hover:border-red-500/60 flex items-center justify-between cursor-pointer text-xs"
                       >
                         <span className="font-medium text-neutral-200 truncate">{r.title}</span>
-                        <span className="text-[10px] text-amber-400/80 ml-2">⚡ Rutina</span>
+                        <span className="text-[10px] text-red-400/80 ml-2">⚡ Rutina</span>
                       </div>
                     ))}
                   </div>
@@ -205,7 +203,7 @@ export const GlobalSearchView: React.FC = () => {
               {matchingCategories.length > 0 && (
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2 flex items-center gap-1.5">
-                    <Tag size={12} className="text-blue-400" />
+                    <Tag size={12} className="text-neutral-400" />
                     <span>Categorías ({matchingCategories.length})</span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -216,7 +214,7 @@ export const GlobalSearchView: React.FC = () => {
                           setSelectedCategoryIdFilter(c.id);
                           setIsSearchOpen(false);
                         }}
-                        className="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-neutral-800"
                         style={{ backgroundColor: `${c.color}20`, color: c.color }}
                       >
                         <IconRenderer name={c.icon} size={13} color={c.color} />

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { Goal, Priority } from '../../types';
-import { getTodayString } from '../../utils/dateUtils';
-import { X, Calendar, Flag, Target, AlignLeft, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import { addDays } from 'date-fns';
 
 interface GoalFormModalProps {
@@ -72,19 +71,19 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
+        className="w-full max-w-lg bg-neutral-950 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5 duration-200"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-neutral-800">
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
             <h3 className="text-sm font-bold text-white">
               {goalToEdit ? 'Editar Objetivo' : 'Nuevo Objetivo a Largo Plazo'}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center"
+            className="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center"
           >
             <X size={16} />
           </button>
@@ -101,7 +100,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
               placeholder="ej. Crear mi empresa antes de diciembre o Aprender un idioma"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-sm font-medium text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-sm font-medium text-white focus:outline-none focus:border-red-500"
             />
           </div>
 
@@ -114,7 +113,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
                 type="date"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-500"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -125,10 +124,10 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
               >
                 {categories.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-neutral-900">
+                  <option key={c.id} value={c.id} className="bg-neutral-950">
                     {c.name}
                   </option>
                 ))}
@@ -145,7 +144,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
               placeholder="Explica brevemente por qué es importante para ti..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-red-500"
             />
           </div>
 
@@ -158,13 +157,13 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
               placeholder="ej. No complicar funcionalidades: lanzar rápido y validar."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-red-500"
             />
           </div>
         </form>
 
         {/* Footer */}
-        <div className="p-4 border-t border-neutral-800 bg-neutral-900 flex items-center justify-end gap-3">
+        <div className="p-4 border-t border-neutral-800 bg-neutral-950 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -176,7 +175,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({ isOpen, onClose, g
             type="button"
             onClick={handleSave}
             disabled={!title.trim()}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-400 text-neutral-950 font-bold text-xs shadow-md disabled:opacity-40"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs shadow-md shadow-red-600/20 disabled:opacity-40"
           >
             Guardar Objetivo
           </button>

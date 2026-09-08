@@ -4,12 +4,8 @@ import { IconRenderer } from '../common/IconRenderer';
 import { getDaysRemaining, formatDateSpanish } from '../../utils/dateUtils';
 import { 
   X, 
-  Target, 
   Calendar, 
-  Plus, 
   Check, 
-  CheckCircle2, 
-  Circle, 
   Clock, 
   Trash2, 
   Edit3,
@@ -60,16 +56,16 @@ export const GoalDetailModal: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
         <div 
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in slide-in-from-bottom-5 duration-200"
+          className="w-full max-w-lg bg-neutral-950 border border-neutral-800 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in slide-in-from-bottom-5 duration-200"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-neutral-800">
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+              <span className="text-xs font-black uppercase tracking-wider text-red-500">
                 Objetivo Estratégico
               </span>
             </div>
@@ -77,7 +73,7 @@ export const GoalDetailModal: React.FC = () => {
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setIsEditOpen(true)}
-                className="w-8 h-8 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
                 title="Editar objetivo"
               >
                 <Edit3 size={14} />
@@ -85,7 +81,7 @@ export const GoalDetailModal: React.FC = () => {
 
               <button
                 onClick={() => deleteGoal(goal.id)}
-                className="w-8 h-8 rounded-xl bg-neutral-800 hover:bg-rose-500/20 text-neutral-300 hover:text-rose-400 flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl bg-neutral-900 hover:bg-red-500/20 text-neutral-300 hover:text-red-400 flex items-center justify-center transition-colors"
                 title="Eliminar objetivo"
               >
                 <Trash2 size={14} />
@@ -93,7 +89,7 @@ export const GoalDetailModal: React.FC = () => {
 
               <button
                 onClick={() => setSelectedGoalId(null)}
-                className="w-8 h-8 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
               >
                 <X size={16} />
               </button>
@@ -115,20 +111,20 @@ export const GoalDetailModal: React.FC = () => {
                   </span>
                 )}
                 
-                <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-400">
+                <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20">
                   <Clock size={11} />
                   {countdown.label}
                 </span>
               </div>
 
-              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
                 {goal.title}
               </h2>
             </div>
 
             {/* Description & Target Date */}
             {goal.description && (
-              <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950/60 p-3.5 rounded-2xl border border-neutral-800/80">
+              <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-900/60 p-3.5 rounded-2xl border border-neutral-800/80">
                 {goal.description}
               </p>
             )}
@@ -141,15 +137,15 @@ export const GoalDetailModal: React.FC = () => {
             </div>
 
             {/* Activity Status Bar (No fake %, just clean counts) */}
-            <div className="p-3.5 rounded-2xl bg-neutral-950 border border-neutral-800/80 flex items-center justify-between">
+            <div className="p-3.5 rounded-2xl bg-neutral-900/80 border border-neutral-800 flex items-center justify-between">
               <div>
                 <span className="text-[10.5px] uppercase font-bold tracking-wider text-neutral-400 block mb-0.5">
                   Actividad conectada
                 </span>
                 <div className="text-sm font-bold text-white">
-                  <span className="text-emerald-400">{stats.completed}</span> completadas
+                  <span className="text-red-500 font-bold">{stats.completed}</span> completadas
                   <span className="text-neutral-600 mx-1.5">·</span>
-                  <span className="text-amber-400">{stats.pending}</span> pendientes
+                  <span className="text-neutral-300">{stats.pending}</span> pendientes
                 </div>
               </div>
 
@@ -164,7 +160,7 @@ export const GoalDetailModal: React.FC = () => {
                 <label className="text-[10.5px] font-semibold text-neutral-400 uppercase tracking-wider block mb-1">
                   Notas de enfoque
                 </label>
-                <p className="text-xs text-neutral-300 bg-neutral-950/40 p-3 rounded-xl border border-neutral-800/60 italic">
+                <p className="text-xs text-neutral-300 bg-neutral-900/40 p-3 rounded-xl border border-neutral-800/60 italic">
                   "{goal.notes}"
                 </p>
               </div>
@@ -174,7 +170,7 @@ export const GoalDetailModal: React.FC = () => {
             <div className="pt-2 border-t border-neutral-800">
               <div className="flex items-center justify-between mb-3">
                 <label className="text-[11px] font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <ListTodo size={14} className="text-teal-400" />
+                  <ListTodo size={14} className="text-red-500" />
                   <span>Tareas vinculadas a este objetivo</span>
                 </label>
               </div>
@@ -186,12 +182,12 @@ export const GoalDetailModal: React.FC = () => {
                   placeholder="Añadir nueva tarea para acercarte a este objetivo..."
                   value={newLinkedTaskTitle}
                   onChange={(e) => setNewLinkedTaskTitle(e.target.value)}
-                  className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-teal-500"
+                  className="flex-1 bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-red-500"
                 />
                 <button
                   type="submit"
                   disabled={!newLinkedTaskTitle.trim()}
-                  className="px-3.5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-neutral-950 font-bold text-xs disabled:opacity-40 transition-colors shrink-0"
+                  className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs disabled:opacity-40 transition-colors shrink-0"
                 >
                   + Añadir
                 </button>
@@ -199,7 +195,7 @@ export const GoalDetailModal: React.FC = () => {
 
               {/* Tasks List */}
               {relatedTasks.length === 0 ? (
-                <div className="text-center py-6 border border-dashed border-neutral-800 rounded-2xl bg-neutral-950/30">
+                <div className="text-center py-6 border border-dashed border-neutral-800 rounded-2xl bg-neutral-900/20">
                   <p className="text-xs text-neutral-400">
                     Aún no hay tareas vinculadas.
                   </p>
@@ -216,8 +212,8 @@ export const GoalDetailModal: React.FC = () => {
                         key={t.id}
                         className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                           isDone 
-                            ? 'bg-neutral-950/40 border-neutral-800/40 opacity-75' 
-                            : 'bg-neutral-950 border-neutral-800'
+                            ? 'bg-neutral-900/40 border-neutral-800/40 opacity-75' 
+                            : 'bg-neutral-900 border-neutral-800'
                         }`}
                       >
                         <div 
@@ -226,8 +222,8 @@ export const GoalDetailModal: React.FC = () => {
                         >
                           <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${
                             isDone 
-                              ? 'bg-emerald-500 border-emerald-500 text-neutral-950' 
-                              : 'border-neutral-600 hover:border-emerald-400'
+                              ? 'bg-red-600 border-red-600 text-white' 
+                              : 'border-neutral-700 hover:border-red-500'
                           }`}>
                             {isDone && <Check size={12} strokeWidth={3} />}
                           </div>
@@ -241,7 +237,7 @@ export const GoalDetailModal: React.FC = () => {
 
                         <div className="flex items-center space-x-2">
                           {isDone ? (
-                            <span className="text-[10.5px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                            <span className="text-[10.5px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
                               ✓ Tarea completada
                             </span>
                           ) : (
@@ -265,10 +261,10 @@ export const GoalDetailModal: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-neutral-800 bg-neutral-900 flex justify-end">
+          <div className="p-4 border-t border-neutral-800 bg-neutral-950 flex justify-end">
             <button
               onClick={() => setSelectedGoalId(null)}
-              className="px-5 py-2 text-xs font-semibold rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+              className="px-5 py-2 text-xs font-bold rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white transition-colors"
             >
               Cerrar
             </button>

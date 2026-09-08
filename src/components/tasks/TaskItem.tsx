@@ -11,8 +11,7 @@ import {
   MoreVertical, 
   Calendar, 
   Trash2, 
-  Copy,
-  AlertCircle
+  Copy
 } from 'lucide-react';
 import { checkIsOverdue, getRelativeDateLabel } from '../../utils/dateUtils';
 
@@ -43,20 +42,20 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
   const completedSubtasksCount = task.subtasks.filter(s => s.completed).length;
 
   const priorityColors = {
-    low: 'text-neutral-500 bg-neutral-800/50',
-    normal: 'text-neutral-400 bg-neutral-800/80',
-    high: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-    urgent: 'text-rose-400 bg-rose-500/10 border-rose-500/30'
+    low: 'text-neutral-500 bg-neutral-900 border-neutral-800',
+    normal: 'text-neutral-400 bg-neutral-900 border-neutral-800',
+    high: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
+    urgent: 'text-red-400 bg-red-600/20 border-red-500/50 font-black'
   };
 
   return (
     <div 
       className={`group relative flex items-start gap-3 p-3.5 rounded-2xl transition-all duration-150 border ${
         isCompleted 
-          ? 'bg-neutral-900/40 border-neutral-800/40 opacity-70' 
+          ? 'bg-neutral-950/60 border-neutral-900 opacity-65' 
           : isOverdue 
-            ? 'bg-neutral-900/90 border-rose-500/30 shadow-sm' 
-            : 'bg-neutral-900/80 border-neutral-800/80 hover:border-neutral-700/80 shadow-subtle'
+            ? 'bg-neutral-950 border-red-600/40 shadow-sm' 
+            : 'bg-neutral-950 border-neutral-800/80 hover:border-neutral-700 shadow-subtle'
       }`}
     >
       {/* Tactile Checkbox */}
@@ -68,10 +67,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
         aria-label={isCompleted ? "Marcar como pendiente" : "Marcar como completada"}
         className={`mt-0.5 w-6 h-6 rounded-xl flex items-center justify-center transition-all duration-200 shrink-0 border ${
           isCompleted
-            ? 'bg-emerald-500 border-emerald-500 text-neutral-950 scale-95 shadow-sm shadow-emerald-500/20'
+            ? 'bg-red-600 border-red-600 text-white scale-95 shadow-sm shadow-red-600/30'
             : isOverdue
-              ? 'border-rose-500/60 hover:border-rose-400 bg-rose-500/5'
-              : 'border-neutral-600 hover:border-emerald-400 bg-neutral-800/50 hover:bg-neutral-800'
+              ? 'border-red-500/60 hover:border-red-400 bg-red-500/10'
+              : 'border-neutral-700 hover:border-red-500 bg-neutral-900/60 hover:bg-neutral-900'
         }`}
       >
         {isCompleted && <Check size={14} strokeWidth={3.2} />}
@@ -85,12 +84,12 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
         <div className="flex items-center gap-2 flex-wrap mb-1">
           {/* Time Badge */}
           {task.time && (
-            <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md ${
+            <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md ${
               isCompleted 
-                ? 'text-neutral-500 bg-neutral-800' 
+                ? 'text-neutral-500 bg-neutral-900' 
                 : isOverdue
-                  ? 'text-rose-400 bg-rose-500/15'
-                  : 'text-emerald-400 bg-emerald-500/10'
+                  ? 'text-red-400 bg-red-500/15 border border-red-500/20'
+                  : 'text-red-400 bg-red-500/10'
             }`}>
               <Clock size={11} />
               {task.time}
@@ -100,7 +99,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
           {/* Date Badge if explicitly shown */}
           {showDate && task.date && (
             <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md ${
-              isOverdue ? 'text-rose-400 bg-rose-500/10' : 'text-neutral-400 bg-neutral-800'
+              isOverdue ? 'text-red-400 bg-red-500/10' : 'text-neutral-400 bg-neutral-900'
             }`}>
               <Calendar size={11} />
               {getRelativeDateLabel(task.date)}
@@ -155,15 +154,15 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
           )}
 
           {task.recurrence && task.recurrence.type !== 'none' && (
-            <span className="inline-flex items-center gap-1 text-emerald-400/80">
+            <span className="inline-flex items-center gap-1 text-red-400/80">
               <Repeat size={11} />
               <span className="text-[10.5px]">Recurrente</span>
             </span>
           )}
 
           {goal && (
-            <span className="inline-flex items-center gap-1 text-teal-400/90 truncate max-w-[170px]">
-              <Target size={11} />
+            <span className="inline-flex items-center gap-1 text-neutral-300 truncate max-w-[170px]">
+              <Target size={11} className="text-red-500 shrink-0" />
               <span className="truncate">{goal.title}</span>
             </span>
           )}
@@ -179,7 +178,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
             setShowReschedule(false);
           }}
           aria-label="Opciones de tarea"
-          className="w-7 h-7 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 flex items-center justify-center transition-colors"
+          className="w-7 h-7 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-900 flex items-center justify-center transition-colors"
         >
           <MoreVertical size={15} />
         </button>
@@ -187,26 +186,26 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
         {showMenu && (
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="absolute right-0 top-8 w-44 py-1 bg-neutral-900 border border-neutral-700/80 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100"
+            className="absolute right-0 top-8 w-44 py-1 bg-neutral-950 border border-neutral-800 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100"
           >
             <button
               onClick={() => {
                 setShowReschedule(!showReschedule);
               }}
-              className="w-full text-left px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800 flex items-center gap-2"
+              className="w-full text-left px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-900 flex items-center gap-2"
             >
-              <Calendar size={13} className="text-emerald-400" />
+              <Calendar size={13} className="text-red-500" />
               <span>Reprogramar...</span>
             </button>
 
             {showReschedule && (
-              <div className="bg-neutral-950/80 py-1 border-y border-neutral-800">
+              <div className="bg-neutral-900/80 py-1 border-y border-neutral-800">
                 <button
                   onClick={() => {
                     quickRescheduleTask(task.id, 'today');
                     setShowMenu(false);
                   }}
-                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-emerald-400 hover:bg-neutral-800/60"
+                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-red-400 hover:bg-neutral-800"
                 >
                   • Hoy
                 </button>
@@ -215,7 +214,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
                     quickRescheduleTask(task.id, 'tomorrow');
                     setShowMenu(false);
                   }}
-                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-emerald-400 hover:bg-neutral-800/60"
+                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-red-400 hover:bg-neutral-800"
                 >
                   • Mañana
                 </button>
@@ -224,7 +223,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
                     quickRescheduleTask(task.id, 'this_week');
                     setShowMenu(false);
                   }}
-                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-emerald-400 hover:bg-neutral-800/60"
+                  className="w-full text-left px-5 py-1 text-[11px] text-neutral-300 hover:text-red-400 hover:bg-neutral-800"
                 >
                   • Esta semana
                 </button>
@@ -236,9 +235,9 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
                 duplicateTask(task.id);
                 setShowMenu(false);
               }}
-              className="w-full text-left px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800 flex items-center gap-2"
+              className="w-full text-left px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-900 flex items-center gap-2"
             >
-              <Copy size={13} className="text-blue-400" />
+              <Copy size={13} className="text-neutral-400" />
               <span>Duplicar</span>
             </button>
 
@@ -247,7 +246,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, showDate = false }) =>
                 deleteTask(task.id);
                 setShowMenu(false);
               }}
-              className="w-full text-left px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2"
+              className="w-full text-left px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 flex items-center gap-2"
             >
               <Trash2 size={13} />
               <span>Eliminar</span>
