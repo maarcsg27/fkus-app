@@ -13,7 +13,8 @@ interface FKUSContextType {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   
-  // Modals & Selection
+  isVoiceModalOpen: boolean;
+  setIsVoiceModalOpen: (open: boolean) => void;
   isCreateMenuOpen: boolean;
   setIsCreateMenuOpen: (open: boolean) => void;
   isQuickAddOpen: boolean;
@@ -115,6 +116,7 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
@@ -408,6 +410,8 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
         goals,
         activeTab,
         setActiveTab,
+        isVoiceModalOpen,
+        setIsVoiceModalOpen,
         isCreateMenuOpen,
         setIsCreateMenuOpen,
         isQuickAddOpen,

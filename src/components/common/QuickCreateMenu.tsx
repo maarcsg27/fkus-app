@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
-import { CheckSquare, Target, Zap, X, Plus } from 'lucide-react';
+import { CheckSquare, Target, Zap, X, Plus, Mic, Sparkles } from 'lucide-react';
 
 export const QuickCreateMenu: React.FC = () => {
   const { 
@@ -9,10 +9,16 @@ export const QuickCreateMenu: React.FC = () => {
     setIsQuickAddOpen, 
     setIsGoalFormOpen, 
     setIsRoutineFormOpen,
+    setIsVoiceModalOpen,
     setRoutineToEdit 
   } = useFKUS();
 
   if (!isCreateMenuOpen) return null;
+
+  const handleSelectVoice = () => {
+    setIsCreateMenuOpen(false);
+    setIsVoiceModalOpen(true);
+  };
 
   const handleSelectTask = () => {
     setIsCreateMenuOpen(false);
@@ -55,8 +61,32 @@ export const QuickCreateMenu: React.FC = () => {
           </button>
         </div>
 
-        {/* 3 Options */}
+        {/* Options */}
         <div className="space-y-2.5">
+          {/* 0. NOTA DE VOZ INTELIGENTE (PROMINENT TOP CARD) */}
+          <button
+            onClick={handleSelectVoice}
+            className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-900 to-red-950/40 border border-red-500/40 hover:border-red-500 hover:scale-[1.01] flex items-center space-x-3.5 transition-all text-left group shadow-lg shadow-red-600/10"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 text-white flex items-center justify-center shrink-0 group-hover:scale-105 shadow-md shadow-red-600/30 transition-all">
+              <Mic size={20} strokeWidth={2.5} className="animate-pulse" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center space-x-1.5">
+                <h4 className="text-sm font-black text-white group-hover:text-red-400 transition-colors flex items-center gap-1.5">
+                  <span>Dictar por Voz</span>
+                </h4>
+                <span className="text-[9.5px] bg-red-600/20 text-red-400 border border-red-500/30 px-1.5 py-0.2 rounded font-black flex items-center gap-0.5">
+                  <Sparkles size={10} />
+                  <span>Auto-IA</span>
+                </span>
+              </div>
+              <p className="text-[11px] text-neutral-300 mt-0.5 leading-snug">
+                Habla libremente y completará todos los parámetros.
+              </p>
+            </div>
+          </button>
+
           {/* 1. Tarea */}
           <button
             onClick={handleSelectTask}

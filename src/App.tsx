@@ -13,6 +13,7 @@ import { QuickAddModal } from './components/tasks/QuickAddModal';
 import { TaskDetailModal } from './components/tasks/TaskDetailModal';
 import { GoalFormModal } from './components/goals/GoalFormModal';
 import { RoutineModal } from './components/routines/RoutineModal';
+import { VoiceCaptureModal } from './components/common/VoiceCaptureModal';
 import { GlobalSearchView } from './components/views/GlobalSearchView';
 
 export type DeviceMode = 'auto' | 'desktop' | 'tablet' | 'mobile';
@@ -30,6 +31,8 @@ const MainContent: React.FC<{
     setIsGoalFormOpen, 
     isRoutineFormOpen, 
     setIsRoutineFormOpen,
+    isVoiceModalOpen,
+    setIsVoiceModalOpen,
     routineToEdit,
     setIsSearchOpen,
     setIsCreateMenuOpen
@@ -117,6 +120,12 @@ const MainContent: React.FC<{
           routineToEdit={routineToEdit}
         />
       )}
+
+      {/* Smart Voice Capture Modal */}
+      <VoiceCaptureModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+      />
 
       <GlobalSearchView />
     </div>

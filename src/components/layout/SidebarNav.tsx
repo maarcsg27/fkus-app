@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { ActiveTab } from '../../types';
 import { 
@@ -11,7 +11,8 @@ import {
   Search, 
   Monitor,
   Tablet,
-  Smartphone
+  Smartphone,
+  Mic
 } from 'lucide-react';
 
 interface SidebarNavProps {
@@ -24,6 +25,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
     activeTab, 
     setActiveTab, 
     setIsCreateMenuOpen, 
+    setIsVoiceModalOpen,
     setIsSearchOpen,
     categories,
     selectedCategoryIdFilter,
@@ -69,14 +71,24 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
           </div>
         </div>
 
-        {/* Big Create Action Button */}
-        <button
-          onClick={() => setIsCreateMenuOpen(true)}
-          className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 active:scale-98 text-white font-black text-sm shadow-lg shadow-red-600/25 flex items-center justify-center gap-2 transition-all duration-150"
-        >
-          <Plus size={18} strokeWidth={3} />
-          <span>Añadir Nuevo</span>
-        </button>
+        {/* Big Create Action & Voice Button */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setIsCreateMenuOpen(true)}
+            className="flex-1 py-2.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 active:scale-98 text-white font-black text-xs shadow-md shadow-red-600/25 flex items-center justify-center gap-1.5 transition-all duration-150"
+          >
+            <Plus size={16} strokeWidth={3} />
+            <span>Añadir</span>
+          </button>
+
+          <button
+            onClick={() => setIsVoiceModalOpen(true)}
+            className="p-2.5 rounded-2xl bg-neutral-900/90 hover:bg-red-600/20 text-neutral-300 hover:text-red-400 border border-neutral-800 hover:border-red-500/40 flex items-center justify-center transition-all group"
+            title="Dictar por voz con IA"
+          >
+            <Mic size={16} className="group-hover:scale-110 text-red-500 transition-transform" />
+          </button>
+        </div>
 
         {/* Global Search Button */}
         <button
