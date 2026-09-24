@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
 import { formatDateSpanish, getTodayString, getTomorrowString } from '../../utils/dateUtils';
 import { TaskItem } from '../tasks/TaskItem';
@@ -142,6 +142,7 @@ export const HomeView: React.FC = () => {
           title="Objetivos Estratégicos"
           icon={<Target size={16} />}
           badge={`${filteredGoals.length} ${filteredGoals.length === 1 ? 'meta' : 'metas'}`}
+          autoSlideIntervalMs={10000}
           items={filteredGoals}
           onAdd={() => setIsGoalFormOpen(true)}
           addLabel="Nuevo"
@@ -158,6 +159,7 @@ export const HomeView: React.FC = () => {
           icon={<AlertCircle size={16} className="text-red-500 animate-pulse" />}
           badge={`${filteredOverdueTasks.length} ${filteredOverdueTasks.length === 1 ? 'atrasada' : 'atrasadas'}`}
           badgeColor="text-red-400 bg-red-600/20 border border-red-500/40 font-bold"
+          autoSlideIntervalMs={10000}
           items={filteredOverdueTasks}
           renderItem={(task) => (
             <TaskItem task={task} showDate />

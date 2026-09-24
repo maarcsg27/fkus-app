@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 interface SwipeDeckSliderProps<T> {
@@ -12,6 +12,7 @@ interface SwipeDeckSliderProps<T> {
   onAdd?: () => void;
   addLabel?: string;
   className?: string;
+  autoSlideIntervalMs?: number; // e.g. 10000 for 10 seconds auto-advance
 }
 
 export function SwipeDeckSlider<T>({
@@ -24,12 +25,14 @@ export function SwipeDeckSlider<T>({
   emptyState,
   onAdd,
   addLabel = 'Añadir',
-  className = ''
+  className = '',
+  autoSlideIntervalMs
 }: SwipeDeckSliderProps<T>) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchMoveX, setTouchMoveX] = useState<number | null>(null);
   const [isSwiping, setIsSwiping] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Keep currentIndex in bounds if items change
   useEffect(() => {
@@ -37,6 +40,19 @@ export function SwipeDeckSlider<T>({
       setCurrentIndex(items.length - 1);
     }
   }, [items.length, currentIndex]);
+
+  // Auto-slide timer (every 10s if enabled and > 1 item)
+  useEffect(() => {
+    if (!autoSlideIntervalMs || items.length <= 1 || isPaused || isSwiping) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % items.length);
+    }, autoSlideIntervalMs);
+
+    return () => clearInterval(timer);
+  }, [autoSlideIntervalMs, items.length, isPaused, isSwiping]);
 
   const hasItems = items.length > 0;
   const canGoPrev = currentIndex > 0;
@@ -46,6 +62,8 @@ export function SwipeDeckSlider<T>({
     e?.stopPropagation();
     if (canGoPrev) {
       setCurrentIndex(prev => prev - 1);
+    } else if (items.length > 1) {
+      setCurrentIndex(items.length - 1); // Loop to end
     }
   };
 
@@ -53,6 +71,8 @@ export function SwipeDeckSlider<T>({
     e?.stopPropagation();
     if (canGoNext) {
       setCurrentIndex(prev => prev + 1);
+    } else if (items.length > 1) {
+      setCurrentIndex(0); // Loop to start
     }
   };
 
@@ -168,6 +188,8 @@ export function SwipeDeckSlider<T>({
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           className="relative group"
         >
           {/* Active Single Item Render */}
