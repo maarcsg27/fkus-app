@@ -80,6 +80,8 @@ interface FKUSContextType {
   getGoalStats: (goalId: string) => { completed: number; pending: number; total: number };
   
   // Data management
+  clearAllData: () => void;
+  loadSampleData: () => void;
   resetToDefaults: () => void;
   exportDataJSON: () => string;
   importDataJSON: (jsonStr: string) => boolean;
@@ -88,31 +90,105 @@ interface FKUSContextType {
 const FKUSContext = createContext<FKUSContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  TASKS: 'fkus_tasks_v1',
-  CATEGORIES: 'fkus_categories_v1',
-  ROUTINES: 'fkus_routines_v1',
-  GOALS: 'fkus_goals_v1',
+  TASKS: 'fkus_user_tasks_v2',
+  CATEGORIES: 'fkus_user_categories_v2',
+  ROUTINES: 'fkus_user_routines_v2',
+  GOALS: 'fkus_user_goals_v2',
+};
+
+// Helper to filter out legacy sample/test task IDs
+const isMockTaskId = (id: string) => {
+  return (
+    id === 'task-1' ||
+    id === 'task-2' ||
+    id === 'task-3' ||
+    id === 'task-overdue-1' ||
+    id === 'task-inbox-1' ||
+    id === 'task-inbox-2' ||
+    id === 'task-goal-1' ||
+    id === 'task-goal-2'
+  );
 };
 
 export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.TASKS);
-    return saved ? JSON.parse(saved) : INITIAL_TASKS;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.TASKS);
+      if (saved !== null) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((t: Task) => !isMockTaskId(t.id));
+        }
+      }
+      // Migrate legacy v1 key if present, filtering out mock data
+      const legacy = localStorage.getItem('fkus_tasks_v1');
+      if (legacy !== null) {
+        const parsedLegacy = JSON.parse(legacy);
+        if (Array.isArray(parsedLegacy)) {
+          const userOnly = parsedLegacy.filter((t: Task) => !isMockTaskId(t.id));
+          return userOnly;
+        }
+      }
+      return [];
+    } catch {
+      return [];
+    }
   });
 
   const [categories, setCategories] = useState<Category[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
-    return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
+      if (saved) return JSON.parse(saved);
+      const legacy = localStorage.getItem('fkus_categories_v1');
+      if (legacy) return JSON.parse(legacy);
+      return INITIAL_CATEGORIES;
+    } catch {
+      return INITIAL_CATEGORIES;
+    }
   });
 
   const [routines, setRoutines] = useState<Routine[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ROUTINES);
-    return saved ? JSON.parse(saved) : INITIAL_ROUTINES;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.ROUTINES);
+      if (saved !== null) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((r: Routine) => r.id !== 'routine-morning' && r.id !== 'routine-gym');
+        }
+      }
+      const legacy = localStorage.getItem('fkus_routines_v1');
+      if (legacy !== null) {
+        const parsed = JSON.parse(legacy);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((r: Routine) => r.id !== 'routine-morning' && r.id !== 'routine-gym');
+        }
+      }
+      return [];
+    } catch {
+      return [];
+    }
   });
 
   const [goals, setGoals] = useState<Goal[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.GOALS);
-    return saved ? JSON.parse(saved) : INITIAL_GOALS;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.GOALS);
+      if (saved !== null) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((g: Goal) => g.id !== 'goal-1' && g.id !== 'goal-2');
+        }
+      }
+      const legacy = localStorage.getItem('fkus_goals_v1');
+      if (legacy !== null) {
+        const parsed = JSON.parse(legacy);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((g: Goal) => g.id !== 'goal-1' && g.id !== 'goal-2');
+        }
+      }
+      return [];
+    } catch {
+      return [];
+    }
   });
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
@@ -130,22 +206,55 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string | null>(null);
 
-  // Sync to local storage
+  // Sync to local storage on every state change
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+    try {
+      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+    } catch (e) {
+      console.warn('Error saving tasks:', e);
+    }
   }, [tasks]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
+    try {
+      localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
+    } catch (e) {
+      console.warn('Error saving categories:', e);
+    }
   }, [categories]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.ROUTINES, JSON.stringify(routines));
+    try {
+      localStorage.setItem(STORAGE_KEYS.ROUTINES, JSON.stringify(routines));
+    } catch (e) {
+      console.warn('Error saving routines:', e);
+    }
   }, [routines]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
+    try {
+      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
+    } catch (e) {
+      console.warn('Error saving goals:', e);
+    }
   }, [goals]);
+
+  // Cross-tab synchronization
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.TASKS && e.newValue) {
+        try { setTasks(JSON.parse(e.newValue)); } catch {}
+      } else if (e.key === STORAGE_KEYS.CATEGORIES && e.newValue) {
+        try { setCategories(JSON.parse(e.newValue)); } catch {}
+      } else if (e.key === STORAGE_KEYS.ROUTINES && e.newValue) {
+        try { setRoutines(JSON.parse(e.newValue)); } catch {}
+      } else if (e.key === STORAGE_KEYS.GOALS && e.newValue) {
+        try { setGoals(JSON.parse(e.newValue)); } catch {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Helpers
   const getCategoryById = (id: string) => categories.find(c => c.id === id);
@@ -370,16 +479,36 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const featuredGoal = goals.length > 0 ? goals[0] : null;
 
-  const resetToDefaults = () => {
+  const clearAllData = () => {
+    setTasks([]);
+    setRoutines([]);
+    setGoals([]);
+    try {
+      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.ROUTINES, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify([]));
+      localStorage.removeItem('fkus_tasks_v1');
+      localStorage.removeItem('fkus_routines_v1');
+      localStorage.removeItem('fkus_goals_v1');
+    } catch (e) {
+      console.warn('LocalStorage clear error:', e);
+    }
+  };
+
+  const loadSampleData = () => {
     setTasks(INITIAL_TASKS);
     setCategories(INITIAL_CATEGORIES);
     setRoutines(INITIAL_ROUTINES);
     setGoals(INITIAL_GOALS);
   };
 
+  const resetToDefaults = () => {
+    loadSampleData();
+  };
+
   const exportDataJSON = () => {
     return JSON.stringify({
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
       tasks,
       categories,
@@ -465,6 +594,8 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
         getCategoryById,
         getGoalById,
         getGoalStats,
+        clearAllData,
+        loadSampleData,
         resetToDefaults,
         exportDataJSON,
         importDataJSON,

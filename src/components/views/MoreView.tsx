@@ -6,7 +6,8 @@ import {
   Search, 
   Download, 
   Upload, 
-  RotateCcw
+  RotateCcw,
+  Trash2
 } from 'lucide-react';
 import { CategoriesModal } from './CategoriesModal';
 import { StatsModal } from './StatsModal';
@@ -16,6 +17,8 @@ export const MoreView: React.FC = () => {
     setIsCategoryModalOpen, 
     setIsStatsModalOpen, 
     setIsSearchOpen, 
+    clearAllData,
+    loadSampleData,
     resetToDefaults, 
     exportDataJSON, 
     importDataJSON 
@@ -183,21 +186,45 @@ export const MoreView: React.FC = () => {
 
           <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
             <div className="flex items-center space-x-2.5">
-              <RotateCcw size={17} className="text-neutral-400" />
+              <Trash2 size={17} className="text-red-500" />
               <div>
-                <h5 className="text-xs font-bold text-white">Restaurar ejemplos iniciales</h5>
-                <p className="text-[11px] text-neutral-400">Recarga las tareas y objetivos del ejemplo.</p>
+                <h5 className="text-xs font-bold text-white">Vaciar todos los datos</h5>
+                <p className="text-[11px] text-neutral-400">Borra todas las tareas, rutinas y objetivos para empezar de cero.</p>
               </div>
             </div>
             <button
               onClick={() => {
-                if (window.confirm('¿Deseas recargar los datos de ejemplo iniciales?')) {
-                  resetToDefaults();
+                if (window.confirm('¿Seguro que deseas vaciar todas las tareas, rutinas y objetivos? Esta acción empezará tu app de cero.')) {
+                  clearAllData();
+                  setImportStatus('¡Datos vaciados! Tu app está lista y limpia.');
+                  setTimeout(() => setImportStatus(null), 3000);
                 }
               }}
-              className="px-3 py-1.5 bg-neutral-900 hover:bg-red-500/20 text-xs font-bold text-neutral-300 hover:text-red-400 rounded-xl border border-neutral-800"
+              className="px-3 py-1.5 bg-neutral-900 hover:bg-red-600 text-xs font-bold text-neutral-300 hover:text-white rounded-xl border border-neutral-800 transition-colors"
             >
-              Restaurar
+              Vaciar
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
+            <div className="flex items-center space-x-2.5">
+              <RotateCcw size={17} className="text-neutral-400" />
+              <div>
+                <h5 className="text-xs font-bold text-white">Cargar datos de ejemplo</h5>
+                <p className="text-[11px] text-neutral-400">Carga tareas y objetivos de prueba para explorar la app.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                if (window.confirm('¿Deseas cargar los datos de prueba de ejemplo?')) {
+                  loadSampleData();
+                  setImportStatus('¡Datos de ejemplo cargados!');
+                  setTimeout(() => setImportStatus(null), 3000);
+                }
+              }}
+              className="px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-xs font-bold text-neutral-300 hover:text-white rounded-xl border border-neutral-800 transition-colors"
+            >
+              Cargar
             </button>
           </div>
         </div>
