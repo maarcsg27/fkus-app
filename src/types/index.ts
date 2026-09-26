@@ -85,3 +85,22 @@ export interface Goal {
 }
 
 export type ActiveTab = 'home' | 'calendar' | 'tasks' | 'goals' | 'more';
+
+export type AuthProviderType = 'email' | 'google' | 'admin';
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  email: string;
+  birthDate?: string; // YYYY-MM-DD
+  photoURL?: string;
+  isEmailVerified: boolean;
+  authProvider: AuthProviderType;
+  createdAt: string;
+}
+
+export interface AuthState {
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}

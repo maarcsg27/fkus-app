@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AuthProvider } from './context/AuthContext';
 import { FKUSProvider, useFKUS } from './context/FKUSContext';
 import { TopHeader } from './components/layout/TopHeader';
 import { BottomNav } from './components/layout/BottomNav';
@@ -15,6 +16,8 @@ import { GoalFormModal } from './components/goals/GoalFormModal';
 import { RoutineModal } from './components/routines/RoutineModal';
 import { VoiceCaptureModal } from './components/common/VoiceCaptureModal';
 import { GlobalSearchView } from './components/views/GlobalSearchView';
+import { AuthModal } from './components/auth/AuthModal';
+import { UserProfileModal } from './components/auth/UserProfileModal';
 
 export type DeviceMode = 'auto' | 'desktop' | 'tablet' | 'mobile';
 
@@ -128,6 +131,8 @@ const MainContent: React.FC<{
       />
 
       <GlobalSearchView />
+      <AuthModal />
+      <UserProfileModal />
     </div>
   );
 };
@@ -136,11 +141,14 @@ export function App() {
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('auto');
 
   return (
-    <FKUSProvider>
-      <MainContent deviceMode={deviceMode} setDeviceMode={setDeviceMode} />
-    </FKUSProvider>
+    <AuthProvider>
+      <FKUSProvider>
+        <MainContent deviceMode={deviceMode} setDeviceMode={setDeviceMode} />
+      </FKUSProvider>
+    </AuthProvider>
   );
 }
 
 export default App;
+
 

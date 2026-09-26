@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
-import { Search, Filter, X, MoreHorizontal, Monitor, Tablet, Smartphone } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Search, Filter, X, MoreHorizontal, Monitor, Tablet, Smartphone, User } from 'lucide-react';
 import { IconRenderer } from '../common/IconRenderer';
 
 interface TopHeaderProps {
@@ -17,6 +18,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode 
     activeTab,
     setActiveTab 
   } = useFKUS();
+
+  const { currentUser, openLoginModal, setIsProfileModalOpen } = useAuth();
 
   const activeCategory = categories.find(c => c.id === selectedCategoryIdFilter);
 
@@ -117,6 +120,39 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode 
           >
             <Search size={15} />
           </button>
+
+          {/* User Account / Profile Button */}
+          {currentUser ? (
+            <button
+              onClick={() => setIsProfileModalOpen(true)}
+              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-800 hover:border-red-500/50 transition-all group"
+              title={`Perfil: ${currentUser.username}`}
+            >
+              {currentUser.photoURL ? (
+                <img 
+                  src={currentUser.photoURL} 
+                  alt={currentUser.username} 
+                  className="w-6 h-6 rounded-lg object-cover border border-red-500/40"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-lg bg-neutral-900 border border-red-500/40 text-red-400 text-[11px] font-black flex items-center justify-center">
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <span className="text-xs font-bold text-neutral-300 group-hover:text-white max-w-[80px] sm:max-w-[110px] truncate hidden xs:inline">
+                {currentUser.username}
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={openLoginModal}
+              className="px-2.5 py-1.5 rounded-xl bg-neutral-950 hover:bg-red-600/20 text-neutral-300 hover:text-red-400 border border-neutral-800 hover:border-red-500/50 text-xs font-bold flex items-center gap-1.5 transition-all"
+              title="Iniciar sesión o crear cuenta"
+            >
+              <User size={14} className="text-red-500" />
+              <span className="hidden sm:inline">Cuenta</span>
+            </button>
+          )}
 
           {/* Más / Ajustes Button */}
           <button

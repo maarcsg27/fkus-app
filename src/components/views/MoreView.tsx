@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { useFKUS } from '../../context/FKUSContext';
+import { useAuth } from '../../context/AuthContext';
 import { 
   Tag, 
   BarChart3, 
   Search, 
   Download, 
   Upload, 
-  RotateCcw,
-  Trash2
+  RotateCcw, 
+  Trash2,
+  User,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  LogIn,
+  LogOut,
+  Database
 } from 'lucide-react';
 import { CategoriesModal } from './CategoriesModal';
 import { StatsModal } from './StatsModal';
@@ -23,6 +31,14 @@ export const MoreView: React.FC = () => {
     exportDataJSON, 
     importDataJSON 
   } = useFKUS();
+
+  const {
+    currentUser,
+    openLoginModal,
+    openRegisterModal,
+    setIsProfileModalOpen,
+    logout,
+  } = useAuth();
 
   const [copySuccess, setCopySuccess] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
@@ -66,8 +82,101 @@ export const MoreView: React.FC = () => {
           Más y Ajustes
         </h1>
         <p className="text-xs text-neutral-400">
-          Personalización, categorías, estadísticas y respaldo de tus datos.
+          Cuenta, sincronización en base de datos, categorías y estadísticas.
         </p>
+      </div>
+
+      {/* Account & Database Cloud Sync Card */}
+      <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-neutral-400">
+            <Database size={14} className="text-red-500" />
+            <span>Base de Datos y Cuenta</span>
+          </div>
+          {currentUser && (
+            <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Sincronizado
+            </span>
+          )}
+        </div>
+
+        {currentUser ? (
+          <div className="flex items-center justify-between pt-1">
+            <div 
+              onClick={() => setIsProfileModalOpen(true)}
+              className="flex items-center space-x-3 cursor-pointer group"
+            >
+              {currentUser.photoURL ? (
+                <img 
+                  src={currentUser.photoURL} 
+                  alt={currentUser.username} 
+                  className="w-11 h-11 rounded-xl object-cover border border-red-500/40"
+                />
+              ) : (
+                <div className="w-11 h-11 rounded-xl bg-neutral-900 border border-red-500/40 text-red-500 font-black text-base flex items-center justify-center">
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
+                    {currentUser.username}
+                  </h4>
+                  {currentUser.authProvider === 'admin' && (
+                    <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-red-600/30 text-red-400 border border-red-500/40 uppercase">
+                      Admin
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-neutral-400">{currentUser.email}</p>
+                {currentUser.birthDate && (
+                  <p className="text-[11px] text-neutral-500">🎂 {currentUser.birthDate}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="px-3 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-850 text-white font-bold text-xs border border-neutral-800"
+              >
+                Ver Perfil
+              </button>
+              <button
+                onClick={logout}
+                className="p-2 rounded-xl bg-neutral-900 hover:bg-red-600/20 text-neutral-400 hover:text-red-400 border border-neutral-800 transition-colors"
+                title="Cerrar sesión"
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div>
+              <h4 className="text-xs font-bold text-white">Modo Invitado (Almacenamiento Local)</h4>
+              <p className="text-[11px] text-neutral-400">
+                Inicia sesión o crea una cuenta para guardar tus datos en la nube y acceder desde cualquier dispositivo.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={openLoginModal}
+                className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md shadow-red-600/20 flex items-center gap-1.5"
+              >
+                <LogIn size={14} />
+                <span>Iniciar Sesión</span>
+              </button>
+              <button
+                onClick={openRegisterModal}
+                className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-200 hover:text-white font-bold text-xs border border-neutral-800"
+              >
+                Crear Cuenta
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main Action Hub */}

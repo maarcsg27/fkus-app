@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFKUS } from '../../context/FKUSContext';
+import { useAuth } from '../../context/AuthContext';
 import { ActiveTab } from '../../types';
 import { 
   Home, 
@@ -12,7 +13,10 @@ import {
   Monitor,
   Tablet,
   Smartphone,
-  Mic
+  Mic,
+  User,
+  LogIn,
+  ShieldCheck
 } from 'lucide-react';
 
 interface SidebarNavProps {
@@ -34,6 +38,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
     overdueTasks,
     goals
   } = useFKUS();
+
+  const { currentUser, openLoginModal, setIsProfileModalOpen } = useAuth();
 
   const pendingTodayCount = todayTasks.filter(t => t.status === 'pending').length;
   const overdueCount = overdueTasks.length;
@@ -190,8 +196,54 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
         </div>
       </div>
 
-      {/* Bottom section: Device preview mode */}
+      {/* Bottom section: User Profile & Device preview mode */}
       <div className="pt-3 border-t border-neutral-900 space-y-3">
+        {/* User Account / Sign In Widget */}
+        {currentUser ? (
+          <div 
+            onClick={() => setIsProfileModalOpen(true)}
+            className="p-2.5 rounded-2xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-850 hover:border-red-500/50 cursor-pointer transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center space-x-2.5 min-w-0">
+              {currentUser.photoURL ? (
+                <img 
+                  src={currentUser.photoURL} 
+                  alt={currentUser.username} 
+                  className="w-8 h-8 rounded-xl object-cover border border-red-500/40 shrink-0"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-xl bg-neutral-900 border border-red-500/40 text-red-500 font-black text-xs flex items-center justify-center shrink-0">
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-xs font-black text-white truncate group-hover:text-red-400 transition-colors">
+                    {currentUser.username}
+                  </p>
+                  {currentUser.authProvider === 'admin' && (
+                    <span className="text-[8.5px] font-extrabold uppercase px-1 py-0.2 rounded bg-red-600/30 text-red-400 border border-red-500/40">
+                      Admin
+                    </span>
+                  )}
+                </div>
+                <p className="text-[10px] text-neutral-400 truncate">
+                  {currentUser.isEmailVerified ? 'Cuenta activa' : 'Verificación pendiente'}
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] text-neutral-400 group-hover:text-white">⚙️</span>
+          </div>
+        ) : (
+          <button
+            onClick={openLoginModal}
+            className="w-full py-2.5 px-3 rounded-2xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-800 hover:border-red-500/50 text-neutral-200 hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <LogIn size={14} className="text-red-500" />
+            <span>Iniciar Sesión / Cuenta</span>
+          </button>
+        )}
+
         {/* Device Mode Switcher */}
         <div className="space-y-1.5">
           <div className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider px-1">

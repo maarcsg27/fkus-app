@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Task, Category, Routine, Goal, ActiveTab, Subtask } from '../types';
 import { INITIAL_CATEGORIES, INITIAL_GOALS, INITIAL_ROUTINES, INITIAL_TASKS } from '../data/initialData';
 import { checkIsOverdue, getTodayString, getTomorrowString } from '../utils/dateUtils';
 import confetti from 'canvas-confetti';
-import { addDays } from 'date-fns';
+import { addDays, format } from 'date-fns';
+import { useAuth } from './AuthContext';
+import { dbService } from '../services/dbService';
 
 interface FKUSContextType {
   tasks: Task[];
@@ -12,6 +14,7 @@ interface FKUSContextType {
   goals: Goal[];
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
+  isDataLoading: boolean;
   
   isVoiceModalOpen: boolean;
   setIsVoiceModalOpen: (open: boolean) => void;
@@ -89,107 +92,15 @@ interface FKUSContextType {
 
 const FKUSContext = createContext<FKUSContextType | undefined>(undefined);
 
-const STORAGE_KEYS = {
-  TASKS: 'fkus_user_tasks_v2',
-  CATEGORIES: 'fkus_user_categories_v2',
-  ROUTINES: 'fkus_user_routines_v2',
-  GOALS: 'fkus_user_goals_v2',
-};
-
-// Helper to filter out legacy sample/test task IDs
-const isMockTaskId = (id: string) => {
-  return (
-    id === 'task-1' ||
-    id === 'task-2' ||
-    id === 'task-3' ||
-    id === 'task-overdue-1' ||
-    id === 'task-inbox-1' ||
-    id === 'task-inbox-2' ||
-    id === 'task-goal-1' ||
-    id === 'task-goal-2'
-  );
-};
-
 export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.TASKS);
-      if (saved !== null) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((t: Task) => !isMockTaskId(t.id));
-        }
-      }
-      // Migrate legacy v1 key if present, filtering out mock data
-      const legacy = localStorage.getItem('fkus_tasks_v1');
-      if (legacy !== null) {
-        const parsedLegacy = JSON.parse(legacy);
-        if (Array.isArray(parsedLegacy)) {
-          const userOnly = parsedLegacy.filter((t: Task) => !isMockTaskId(t.id));
-          return userOnly;
-        }
-      }
-      return [];
-    } catch {
-      return [];
-    }
-  });
+  const { currentUser } = useAuth();
+  const currentUserId = currentUser?.id || 'guest_user';
 
-  const [categories, setCategories] = useState<Category[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
-      if (saved) return JSON.parse(saved);
-      const legacy = localStorage.getItem('fkus_categories_v1');
-      if (legacy) return JSON.parse(legacy);
-      return INITIAL_CATEGORIES;
-    } catch {
-      return INITIAL_CATEGORIES;
-    }
-  });
-
-  const [routines, setRoutines] = useState<Routine[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.ROUTINES);
-      if (saved !== null) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((r: Routine) => r.id !== 'routine-morning' && r.id !== 'routine-gym');
-        }
-      }
-      const legacy = localStorage.getItem('fkus_routines_v1');
-      if (legacy !== null) {
-        const parsed = JSON.parse(legacy);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((r: Routine) => r.id !== 'routine-morning' && r.id !== 'routine-gym');
-        }
-      }
-      return [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [goals, setGoals] = useState<Goal[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.GOALS);
-      if (saved !== null) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((g: Goal) => g.id !== 'goal-1' && g.id !== 'goal-2');
-        }
-      }
-      const legacy = localStorage.getItem('fkus_goals_v1');
-      if (legacy !== null) {
-        const parsed = JSON.parse(legacy);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((g: Goal) => g.id !== 'goal-1' && g.id !== 'goal-2');
-        }
-      }
-      return [];
-    } catch {
-      return [];
-    }
-  });
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
+  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState<boolean>(true);
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
@@ -206,55 +117,59 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string | null>(null);
 
-  // Sync to local storage on every state change
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
-    } catch (e) {
-      console.warn('Error saving tasks:', e);
-    }
-  }, [tasks]);
+  const isInitialLoad = useRef(true);
 
+  // Load user data whenever current user changes
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
-    } catch (e) {
-      console.warn('Error saving categories:', e);
-    }
-  }, [categories]);
+    let isCancelled = false;
+    setIsDataLoading(true);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.ROUTINES, JSON.stringify(routines));
-    } catch (e) {
-      console.warn('Error saving routines:', e);
-    }
-  }, [routines]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
-    } catch (e) {
-      console.warn('Error saving goals:', e);
-    }
-  }, [goals]);
-
-  // Cross-tab synchronization
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEYS.TASKS && e.newValue) {
-        try { setTasks(JSON.parse(e.newValue)); } catch {}
-      } else if (e.key === STORAGE_KEYS.CATEGORIES && e.newValue) {
-        try { setCategories(JSON.parse(e.newValue)); } catch {}
-      } else if (e.key === STORAGE_KEYS.ROUTINES && e.newValue) {
-        try { setRoutines(JSON.parse(e.newValue)); } catch {}
-      } else if (e.key === STORAGE_KEYS.GOALS && e.newValue) {
-        try { setGoals(JSON.parse(e.newValue)); } catch {}
+    const loadData = async () => {
+      try {
+        const data = await dbService.loadUserData(currentUserId);
+        if (!isCancelled) {
+          setTasks(data.tasks);
+          setCategories(data.categories.length > 0 ? data.categories : INITIAL_CATEGORIES);
+          setRoutines(data.routines);
+          setGoals(data.goals);
+        }
+      } catch (err) {
+        console.warn('Error loading user data from dbService:', err);
+      } finally {
+        if (!isCancelled) {
+          setIsDataLoading(false);
+          isInitialLoad.current = false;
+        }
       }
     };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+
+    loadData();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentUserId]);
+
+  // Sync to database and storage on state changes (avoid overwriting during initial load)
+  useEffect(() => {
+    if (isInitialLoad.current || isDataLoading) return;
+    dbService.saveTasks(currentUserId, tasks);
+  }, [tasks, currentUserId, isDataLoading]);
+
+  useEffect(() => {
+    if (isInitialLoad.current || isDataLoading) return;
+    dbService.saveCategories(currentUserId, categories);
+  }, [categories, currentUserId, isDataLoading]);
+
+  useEffect(() => {
+    if (isInitialLoad.current || isDataLoading) return;
+    dbService.saveRoutines(currentUserId, routines);
+  }, [routines, currentUserId, isDataLoading]);
+
+  useEffect(() => {
+    if (isInitialLoad.current || isDataLoading) return;
+    dbService.saveGoals(currentUserId, goals);
+  }, [goals, currentUserId, isDataLoading]);
 
   // Helpers
   const getCategoryById = (id: string) => categories.find(c => c.id === id);
@@ -298,26 +213,21 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const toggleTaskStatus = (id: string) => {
     setTasks(prev => prev.map(t => {
       if (t.id !== id) return t;
-      const nextStatus = t.status === 'completed' ? 'pending' : 'completed';
+      const newStatus = t.status === 'completed' ? 'pending' : 'completed';
       
-      if (nextStatus === 'completed') {
-        // Trigger celebratory confetti in red & white palette
-        try {
-          confetti({
-            particleCount: 40,
-            spread: 60,
-            origin: { y: 0.85 },
-            colors: ['#ef4444', '#dc2626', '#ffffff', '#7f1d1d']
-          });
-        } catch {
-          // ignore
-        }
+      if (newStatus === 'completed') {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.8 },
+          colors: ['#ef4444', '#dc2626', '#b91c1c', '#ffffff']
+        });
       }
 
       return {
         ...t,
-        status: nextStatus,
-        completedAt: nextStatus === 'completed' ? getTodayString() : undefined
+        status: newStatus,
+        completedAt: newStatus === 'completed' ? new Date().toISOString() : undefined,
       };
     }));
   };
@@ -328,38 +238,39 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const duplicateTask = (id: string) => {
-    const original = tasks.find(t => t.id === id);
-    if (!original) return;
-    const duplicated: Task = {
-      ...original,
+    const target = tasks.find(t => t.id === id);
+    if (!target) return;
+
+    const copy: Task = {
+      ...target,
       id: `task-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      title: `${original.title} (copia)`,
+      title: `${target.title} (Copia)`,
       status: 'pending',
       completedAt: undefined,
       createdAt: getTodayString(),
-      subtasks: original.subtasks.map(s => ({ ...s, id: `sub-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`, completed: false }))
+      subtasks: target.subtasks.map(s => ({
+        ...s,
+        id: `sub-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        completed: false
+      }))
     };
-    setTasks(prev => [duplicated, ...prev]);
+
+    setTasks(prev => [copy, ...prev]);
   };
 
   const quickRescheduleTask = (id: string, option: 'today' | 'tomorrow' | 'this_week' | 'date', customDate?: string) => {
-    let newDate: string | undefined = undefined;
     const today = new Date();
-    
-    if (option === 'today') {
-      newDate = getTodayString();
-    } else if (option === 'tomorrow') {
+    let newDate = getTodayString();
+
+    if (option === 'tomorrow') {
       newDate = getTomorrowString();
     } else if (option === 'this_week') {
-      // 3 days from now
-      newDate = addDays(today, 3).toISOString().slice(0, 10);
+      newDate = format(addDays(today, 3), 'yyyy-MM-dd');
     } else if (option === 'date' && customDate) {
       newDate = customDate;
     }
 
-    if (newDate) {
-      updateTask(id, { date: newDate });
-    }
+    updateTask(id, { date: newDate });
   };
 
   const toggleSubtask = (taskId: string, subtaskId: string) => {
@@ -367,41 +278,47 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (t.id !== taskId) return t;
       return {
         ...t,
-        subtasks: t.subtasks.map(s => s.id === subtaskId ? { ...s, completed: !s.completed } : s)
+        subtasks: t.subtasks.map(st => st.id === subtaskId ? { ...st, completed: !st.completed } : st)
       };
     }));
   };
 
   const addSubtask = (taskId: string, title: string) => {
-    if (!title.trim()) return;
-    const newSub: Subtask = {
+    const newSubtask: Subtask = {
       id: `sub-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       taskId,
       title: title.trim(),
-      completed: false
+      completed: false,
     };
+
     setTasks(prev => prev.map(t => {
       if (t.id !== taskId) return t;
-      return { ...t, subtasks: [...t.subtasks, newSub] };
+      return {
+        ...t,
+        subtasks: [...t.subtasks, newSubtask]
+      };
     }));
   };
 
   const deleteSubtask = (taskId: string, subtaskId: string) => {
     setTasks(prev => prev.map(t => {
       if (t.id !== taskId) return t;
-      return { ...t, subtasks: t.subtasks.filter(s => s.id !== subtaskId) };
+      return {
+        ...t,
+        subtasks: t.subtasks.filter(st => st.id !== subtaskId)
+      };
     }));
   };
 
-  // Categories
-  const addCategory = (cat: Omit<Category, 'id'>): Category => {
-    const newCat: Category = {
-      ...cat,
-      id: `cat-custom-${Date.now()}`,
+  // Category methods
+  const addCategory = (catData: Omit<Category, 'id'>): Category => {
+    const newCategory: Category = {
+      id: `cat-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      ...catData,
       isCustom: true,
     };
-    setCategories(prev => [...prev, newCat]);
-    return newCat;
+    setCategories(prev => [...prev, newCategory]);
+    return newCategory;
   };
 
   const updateCategory = (id: string, updates: Partial<Category>) => {
@@ -410,16 +327,13 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const deleteCategory = (id: string) => {
     setCategories(prev => prev.filter(c => c.id !== id));
-    // Default fallback for tasks with deleted category
-    const fallbackId = categories.find(c => c.id !== id)?.id || 'cat-personal';
-    setTasks(prev => prev.map(t => t.categoryId === id ? { ...t, categoryId: fallbackId } : t));
   };
 
-  // Routines
-  const addRoutine = (routine: Omit<Routine, 'id'>): Routine => {
+  // Routine methods
+  const addRoutine = (routineData: Omit<Routine, 'id'>): Routine => {
     const newRoutine: Routine = {
-      ...routine,
-      id: `routine-${Date.now()}`,
+      id: `routine-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      ...routineData,
     };
     setRoutines(prev => [...prev, newRoutine]);
     return newRoutine;
@@ -434,18 +348,18 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (selectedRoutineId === id) setSelectedRoutineId(null);
   };
 
-  const toggleRoutineStep = (_routineId: string, _stepId: string) => {
-    // Visual or step check logic can be added if needed
+  const toggleRoutineStep = (routineId: string, stepId: string) => {
+    console.log('Toggled step:', stepId, 'in routine:', routineId);
   };
 
-  // Goals
-  const addGoal = (goal: Omit<Goal, 'id' | 'createdAt'>): Goal => {
+  // Goal methods
+  const addGoal = (goalData: Omit<Goal, 'id' | 'createdAt'>): Goal => {
     const newGoal: Goal = {
-      ...goal,
-      id: `goal-${Date.now()}`,
+      id: `goal-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      ...goalData,
       createdAt: getTodayString(),
     };
-    setGoals(prev => [...prev, newGoal]);
+    setGoals(prev => [newGoal, ...prev]);
     return newGoal;
   };
 
@@ -455,7 +369,6 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const deleteGoal = (id: string) => {
     setGoals(prev => prev.filter(g => g.id !== id));
-    // Unlink tasks
     setTasks(prev => prev.map(t => t.goalId === id ? { ...t, goalId: undefined } : t));
     if (selectedGoalId === id) setSelectedGoalId(null);
   };
@@ -464,35 +377,24 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateTask(taskId, { goalId });
   };
 
-  // Computed Collections
-  const today = getTodayString();
+  // Filtered views
+  const todayStr = getTodayString();
 
-  const todayTasks = tasks.filter(t => t.date === today && t.status !== 'cancelled');
-  
+  const todayTasks = tasks.filter(t => t.date === todayStr);
   const overdueTasks = tasks.filter(t => checkIsOverdue(t.date, t.status));
-
-  const inboxTasks = tasks.filter(t => !t.date && t.status === 'pending');
-
-  const upcomingTasks = tasks.filter(t => t.date && t.date > today && t.status === 'pending');
-
+  const inboxTasks = tasks.filter(t => !t.date && t.status !== 'completed' && t.status !== 'cancelled');
+  const upcomingTasks = tasks.filter(t => t.date && t.date > todayStr && t.status !== 'completed' && t.status !== 'cancelled');
   const completedTasks = tasks.filter(t => t.status === 'completed');
 
   const featuredGoal = goals.length > 0 ? goals[0] : null;
 
+  // Data management
   const clearAllData = () => {
     setTasks([]);
     setRoutines([]);
     setGoals([]);
-    try {
-      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify([]));
-      localStorage.setItem(STORAGE_KEYS.ROUTINES, JSON.stringify([]));
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify([]));
-      localStorage.removeItem('fkus_tasks_v1');
-      localStorage.removeItem('fkus_routines_v1');
-      localStorage.removeItem('fkus_goals_v1');
-    } catch (e) {
-      console.warn('LocalStorage clear error:', e);
-    }
+    setCategories(INITIAL_CATEGORIES);
+    dbService.clearUserData(currentUserId);
   };
 
   const loadSampleData = () => {
@@ -503,17 +405,17 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetToDefaults = () => {
-    loadSampleData();
+    clearAllData();
   };
 
-  const exportDataJSON = () => {
+  const exportDataJSON = (): string => {
     return JSON.stringify({
-      version: 2,
+      version: '2.0',
       exportedAt: new Date().toISOString(),
       tasks,
       categories,
       routines,
-      goals
+      goals,
     }, null, 2);
   };
 
@@ -539,6 +441,7 @@ export const FKUSProvider: React.FC<{ children: React.ReactNode }> = ({ children
         goals,
         activeTab,
         setActiveTab,
+        isDataLoading,
         isVoiceModalOpen,
         setIsVoiceModalOpen,
         isCreateMenuOpen,
