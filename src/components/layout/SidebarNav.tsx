@@ -68,12 +68,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ deviceMode, setDeviceMod
             className="w-10 h-10 rounded-2xl object-contain shadow-md shadow-red-600/30 group-hover:scale-105 transition-transform"
           />
           <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-black text-xl tracking-wider text-white">FKUS</span>
-              <span className="text-[9px] uppercase font-black px-1.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">
-                PRO
-              </span>
-            </div>
+            <span className="font-black text-xl tracking-wider text-white">FKUS</span>
           </div>
         </div>
 

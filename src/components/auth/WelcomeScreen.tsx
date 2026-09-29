@@ -55,13 +55,10 @@ export const WelcomeScreen: React.FC = () => {
 
         {/* Brand Name & Slogan */}
         <div className="space-y-2">
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center">
             <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
               FKUS
             </h1>
-            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-red-600/20 text-red-400 border border-red-500/30">
-              PRO
-            </span>
           </div>
 
           {/* Slogan */}

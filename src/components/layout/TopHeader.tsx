@@ -37,12 +37,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ deviceMode, setDeviceMode 
             className="w-8 h-8 rounded-xl object-contain shadow-sm shadow-red-600/20 group-hover:scale-105 transition-transform" 
           />
           <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-black text-base tracking-wider text-white">FKUS</span>
-              <span className="text-[9px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
-                PRO
-              </span>
-            </div>
+            <span className="font-black text-base tracking-wider text-white">FKUS</span>
           </div>
         </div>
 
