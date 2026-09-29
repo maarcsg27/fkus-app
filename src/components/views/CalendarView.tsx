@@ -15,17 +15,6 @@ export const CalendarView: React.FC = () => {
       <div className="flex items-center justify-between px-1 pt-1">
         <div className="flex items-center space-x-1 bg-neutral-950 p-1 rounded-2xl border border-neutral-800">
           <button
-            onClick={() => setCalendarMode('week')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              calendarMode === 'week'
-                ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Semana
-          </button>
-
-          <button
             onClick={() => setCalendarMode('day')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               calendarMode === 'day'
@@ -34,6 +23,17 @@ export const CalendarView: React.FC = () => {
             }`}
           >
             Día
+          </button>
+
+          <button
+            onClick={() => setCalendarMode('week')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              calendarMode === 'week'
+                ? 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+                : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            Semana
           </button>
 
           <button
