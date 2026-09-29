@@ -26,19 +26,6 @@ export const WelcomeScreen: React.FC = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[520px] h-[340px] sm:h-[520px] bg-red-600/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute -top-20 right-1/4 w-72 h-72 bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-      {/* Top Header Placeholder / Subtle indicator */}
-      <div className="w-full flex items-center justify-between max-w-md mx-auto z-10 pt-2 opacity-80">
-        <div className="flex items-center space-x-1.5">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-[11px] font-mono tracking-widest text-neutral-400 uppercase">
-            Productividad Pura
-          </span>
-        </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400">
-          v2.0
-        </span>
-      </div>
-
       {/* Center Hero Section: Logo, Name & Slogan */}
       <div className="flex flex-col items-center justify-center text-center max-w-sm sm:max-w-md mx-auto my-auto z-10 space-y-6">
         {/* Centered App Logo */}
@@ -64,9 +51,6 @@ export const WelcomeScreen: React.FC = () => {
           {/* Slogan */}
           <p className="text-base sm:text-lg font-medium text-neutral-300 tracking-wide">
             Apúntalo. Organízalo. Hazlo.
-          </p>
-          <p className="text-xs text-neutral-400 max-w-xs mx-auto">
-            Tu centro de mando minimalista para tareas, metas y rutinas diarias.
           </p>
         </div>
 
