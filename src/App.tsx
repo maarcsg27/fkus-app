@@ -18,6 +18,8 @@ import { VoiceCaptureModal } from './components/common/VoiceCaptureModal';
 import { GlobalSearchView } from './components/views/GlobalSearchView';
 import { AuthModal } from './components/auth/AuthModal';
 import { UserProfileModal } from './components/auth/UserProfileModal';
+import { WelcomeScreen } from './components/auth/WelcomeScreen';
+import { useAuth } from './context/AuthContext';
 
 export type DeviceMode = 'auto' | 'desktop' | 'tablet' | 'mobile';
 
@@ -41,6 +43,8 @@ const MainContent: React.FC<{
     setIsCreateMenuOpen
   } = useFKUS();
 
+  const { hasEnteredApp } = useAuth();
+
   // Global keyboard shortcuts (Cmd/Ctrl + K for search, N for new item)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,6 +56,16 @@ const MainContent: React.FC<{
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setIsSearchOpen]);
+
+  // If user has not pressed "Entrar" on the landing screen, show WelcomeScreen
+  if (!hasEnteredApp) {
+    return (
+      <>
+        <WelcomeScreen />
+        <AuthModal />
+      </>
+    );
+  }
 
   // Determine layout based on deviceMode
   const isForcedDesktop = deviceMode === 'desktop';

@@ -8,6 +8,8 @@ interface AuthContextType {
   currentUser: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  hasEnteredApp: boolean;
+  setHasEnteredApp: (entered: boolean) => void;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   isProfileModalOpen: boolean;
@@ -30,6 +32,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => authService.getPersistedUser());
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasEnteredApp, setHasEnteredApp] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
@@ -84,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = await authService.login(identifier, password);
       setCurrentUser(user);
       setIsAuthModalOpen(false);
+      setHasEnteredApp(true);
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const result = await authService.register(username, email, password, birthDate);
       setCurrentUser(result.user);
+      setHasEnteredApp(true);
       return { verificationSent: result.verificationSent };
     } finally {
       setIsLoading(false);
@@ -106,6 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = await authService.loginWithGoogle();
       setCurrentUser(user);
       setIsAuthModalOpen(false);
+      setHasEnteredApp(true);
     } finally {
       setIsLoading(false);
     }
@@ -117,6 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = await authService.loginAsAdmin('admin123');
       setCurrentUser(user);
       setIsAuthModalOpen(false);
+      setHasEnteredApp(true);
     } finally {
       setIsLoading(false);
     }
@@ -139,6 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await authService.logout();
       setCurrentUser(null);
       setIsProfileModalOpen(false);
+      setHasEnteredApp(false);
     } finally {
       setIsLoading(false);
     }
@@ -150,6 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentUser,
         isAuthenticated: !!currentUser,
         isLoading,
+        hasEnteredApp,
+        setHasEnteredApp,
         isAuthModalOpen,
         setIsAuthModalOpen,
         isProfileModalOpen,
