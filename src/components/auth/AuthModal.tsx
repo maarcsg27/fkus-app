@@ -138,8 +138,12 @@ export const AuthModal: React.FC = () => {
 
         {/* Header Branding */}
         <div className="text-center pt-2">
-          <div className="w-12 h-12 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto mb-3 shadow-inner">
-            <span className="text-red-500 font-black text-xl tracking-tighter">FK</span>
+          <div className="w-14 h-14 rounded-2xl bg-neutral-950 border border-neutral-800 p-2.5 flex items-center justify-center mx-auto mb-3 shadow-xl shadow-red-600/10">
+            <img 
+              src="/logo-icon.png" 
+              alt="FKUS" 
+              className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(239,68,68,0.3)]" 
+            />
           </div>
           <h2 className="text-xl font-black text-white tracking-tight">
             {authModalMode === 'login' ? 'Iniciar Sesión en FKUS' : 'Crear Cuenta de Usuario'}
